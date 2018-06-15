@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_marginBottom="1dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_discover_list_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="time" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/image_discover_list"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_discover_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="left"
+        android:singleLine="true"
+        android:text=""
+        tools:ignore="RtlHardcoded" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_discover_list_content_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:ellipsize="end"
+        android:gravity="left"
+        android:lines="3"
+        android:text=""
+        tools:ignore="RtlHardcoded" />
+
+
+</LinearLayout>

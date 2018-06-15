@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/btn_dialog_send_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center|left"
+            android:text="选择送达时间"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+     <!--立即送达-->
+    <LinearLayout
+        android:id="@+id/btn_dialog_send_at_once"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center|left"
+            android:text="立即送达"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+    <!--今日上午-->
+    <LinearLayout
+        android:id="@+id/btn_dialog_send_today_morning"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center|left"
+            android:text="今日   08:00--12:00"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+    <!--今日下午-->
+    <LinearLayout
+        android:id="@+id/btn_dialog_send_today_afternoon"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center|left"
+            android:text="今日   12:00--24:00"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+    <!--明日上午-->
+    <LinearLayout
+        android:id="@+id/btn_dialog_send_tomorrow_morning"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center|left"
+            android:text="明日   08:00--12:00"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_dialog_order_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/app_main"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--选择器-->
+        <declare-styleable name="wheelview">
+            <attr name="gravity">
+                <enum name="center" value="17"/>
+                <enum name="left" value="3"/>
+                <enum name="right" value="5"/>
+            </attr>
+            <attr name="textSize" format="dimension"/>
+            <attr name="textColorOut" format="color"/>
+            <attr name="textColorCenter" format="color"/>
+            <attr name="dividerColor" format="color"/>
+        </declare-styleable>
+
+    <!--仿IOS选择按钮-->
+    <declare-styleable name="SwitchButton">
+        <attr name="sb_shadow_radius" format="reference|dimension"/>
+        <attr name="sb_shadow_offset" format="reference|dimension"/>
+        <attr name="sb_shadow_color" format="reference|color"/>
+        <attr name="sb_uncheck_color" format="reference|color"/>
+        <attr name="sb_checked_color" format="reference|color"/>
+
+        <attr name="sb_border_width" format="reference|dimension"/>
+        <attr name="sb_checkline_color" format="reference|color"/>
+        <attr name="sb_checkline_width" format="reference|dimension"/>
+        <attr name="sb_uncheckcircle_color" format="reference|color"/>
+        <attr name="sb_uncheckcircle_width" format="reference|dimension"/>
+        <attr name="sb_uncheckcircle_radius" format="reference|dimension"/>
+
+        <attr name="sb_checked" format="reference|boolean"/>
+        <attr name="sb_shadow_effect" format="reference|boolean"/>
+        <attr name="sb_effect_duration" format="reference|integer"/>
+        <attr name="sb_button_color" format="reference|color"/>
+        <attr name="sb_show_indicator" format="reference|boolean"/>
+        <attr name="sb_background" format="reference|color"/>
+        <attr name="sb_enable_effect" format="reference|boolean"/>
+    </declare-styleable>
+
+    <!--数量选择器-->
+    <declare-styleable name="QuantitySelectView">
+        <attr name="reduce_text" format="string"/>
+        <attr name="default_quantity" format="integer"/>
+        <attr name="add_text" format="string"/>
+        <attr name="min_quantity" format="integer"/>
+        <attr name="max_quantity" format="integer"/>
+    </declare-styleable>
+
+</resources>
