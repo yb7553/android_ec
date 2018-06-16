@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.FileUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
@@ -24,9 +25,11 @@ import com.flj.latte.ui.date.DateDialogUtil;
 import com.flj.latte.util.callback.CallbackManager;
 import com.flj.latte.util.callback.CallbackType;
 import com.flj.latte.util.callback.IGlobalCallback;
+import com.flj.latte.util.file.FileUtil;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
 
+import java.io.File;
 import java.util.WeakHashMap;
 
 /**
@@ -60,18 +63,18 @@ public class UserProfileClickListener extends SimpleClickListener {
                                         .load(args)
                                         .into(avatar);
                                 final String upUrl=UploadConfig.UPLOAD_IMG;
-                                final String testPath="content://com.diabin.fastec.yanbin.fileprovider/images/test.jpg";
-                                LatteLogger.d("ON_CROP2", testPath);
+                                //final File realFile = FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), args));
+                                LatteLogger.d("ON_CROP2", args.getPath());
                                 RestClient.builder()
                                         .url(upUrl)
                                         .loader(DELEGATE.getContext())
-                                        .file(testPath)
+                                        .file(args.getPath())
                                         .success(new ISuccess() {
                                             @Override
                                             public void onSuccess(String response) {
                                                 LatteLogger.d("ON_CROP_UPLOAD", response);
-                                                final String path = JSON.parseObject(response).getJSONObject("data")
-                                                        .getString("path");
+                                                final String path = JSON.parseObject(response).getJSONArray("data")
+                                                        .getJSONObject(0).getString("path");
 
                                                 String url = API.Config.getDomain() + API.USER_AVATAR_UPDATE;
                                                 LatteLogger.d("url",url);
