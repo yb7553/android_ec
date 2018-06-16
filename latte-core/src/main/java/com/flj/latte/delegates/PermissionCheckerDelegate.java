@@ -39,8 +39,8 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
     //这个是真正调用的方法
     public void startCameraWithCheck() {
         PermissionCheckerDelegatePermissionsDispatcher.startCameraWithPermissionCheck(this);
-        //PermissionCheckerDelegatePermissionsDispatcher.checkRedWithPermissionCheck(this);
-        //PermissionCheckerDelegatePermissionsDispatcher.checkWriteWithPermissionCheck(this);
+        PermissionCheckerDelegatePermissionsDispatcher.checkRedWithPermissionCheck(this);
+        PermissionCheckerDelegatePermissionsDispatcher.checkWriteWithPermissionCheck(this);
 
     }
 
@@ -52,6 +52,45 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
 
     public void startScanWithCheck(BaseDelegate delegate) {
         PermissionCheckerDelegatePermissionsDispatcher.startScanWithPermissionCheck(this, delegate);
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void checkWrite(){
+
+    }
+
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void checkRed(){
+
+    }
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void onWriteaDenied() {
+
+    }
+
+    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void onWriteNever() {
+
+    }
+
+    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void onWriteRationale(PermissionRequest request) {
+        showRationaleDialog(request);
+    }
+
+    @OnPermissionDenied(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void onRedDenied() {
+
+    }
+
+    @OnNeverAskAgain(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void onRedNever() {
+
+    }
+
+    @OnShowRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void onRedRationale(PermissionRequest request) {
+        showRationaleDialog(request);
     }
 
     @OnPermissionDenied(Manifest.permission.CAMERA)
