@@ -75,33 +75,43 @@ public class CameraHandler implements View.OnClickListener {
 
         //兼容7.0及以上的写法
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            final ContentValues contentValues = new ContentValues(1);
-//            contentValues.put(MediaStore.Images.Media.DATA, tempFile.getPath());
+            final ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, tempFile.getPath());
 
-
-            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
-            if (!imagePath.exists())
-            {
-                imagePath.mkdirs();
-            }
-            File picFile = new File(imagePath, "test.jpg");
-
-            //final Uri uri = DELEGATE.getContext().getContentResolver().
-            //       insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-            final Uri uri =getUriForFile(DELEGATE.getContext(),"com.diabin.fastec.yanbin.fileprovider", picFile);
-
+            final Uri uri = DELEGATE.getContext().getContentResolver().
+                     insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             //需要讲Uri路径转化为实际路径
-//             final File realFile =
-//                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
-            //final Uri realUri = Uri.fromFile(picFile);
-            LatteLogger.d("ON_CROP1", uri);
-            CameraImageBean.getInstance().setPath(uri);
+            final File realFile =
+                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
+            final Uri realUri = Uri.fromFile(realFile);
 
+            CameraImageBean.getInstance().setPath(uri);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            // 授予目录临时共享权限
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+//
+//            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
+//            if (!imagePath.exists())
+//            {
+//                imagePath.mkdirs();
+//            }
+//            File picFile = new File(imagePath, "test.jpg");
+//
+//            //final Uri uri = DELEGATE.getContext().getContentResolver().
+//            //       insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+//
+//            final Uri uri =getUriForFile(DELEGATE.getContext(),"com.diabin.fastec.yanbin.fileprovider", picFile);
+//
+//            //需要讲Uri路径转化为实际路径
+////             final File realFile =
+////                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
+//            //final Uri realUri = Uri.fromFile(picFile);
+//            LatteLogger.d("ON_CROP1", uri);
+//            CameraImageBean.getInstance().setPath(uri);
+//
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//            // 授予目录临时共享权限
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } else {
             final Uri fileUri = Uri.fromFile(tempFile);
             CameraImageBean.getInstance().setPath(fileUri);
