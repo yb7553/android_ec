@@ -88,7 +88,7 @@ public class CameraHandler implements View.OnClickListener {
             CameraImageBean.getInstance().setPath(uri);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
-//
+
 //            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
 //            if (!imagePath.exists())
 //            {
