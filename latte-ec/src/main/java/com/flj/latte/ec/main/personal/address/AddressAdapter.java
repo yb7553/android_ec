@@ -37,7 +37,9 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
             case AddressItemType.ITEM_ADDRESS:
                 final String name = entity.getField(MultipleFields.NAME);
                 final String phone = entity.getField(AddressItemFields.PHONE);
-                final String address = entity.getField(AddressItemFields.ADDRESS);
+                String address = entity.getField(AddressItemFields.ADDRESS);
+                String location = entity.getField(AddressItemFields.LOCATION);
+                address = location + address;
                 final boolean isDefault = entity.getField(MultipleFields.TAG);
                 final int id = entity.getField(MultipleFields.ID);
 
@@ -45,7 +47,7 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView phoneText = holder.getView(R.id.tv_address_phone);
                 final AppCompatTextView addressText = holder.getView(R.id.tv_address_address);
                 final AppCompatTextView deleteTextView = holder.getView(R.id.tv_address_delete);
-                final AppCompatTextView updateTextView=holder.getView(R.id.tv_address_update);
+                final AppCompatTextView updateTextView = holder.getView(R.id.tv_address_update);
                 updateTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -69,7 +71,7 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                                 LatteLogger.d("addressDeleteUrl", addressDeleteUrl);
                                 final WeakHashMap<String, Object> addressDelete = new WeakHashMap<>();
                                 LatteLogger.d("addressid", id);
-                                addressDelete.put("id",id);
+                                addressDelete.put("id", id);
                                 final String jsonString = JSON.toJSONString(addressDelete);
 
                                 RestClient.builder()

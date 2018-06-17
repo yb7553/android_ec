@@ -30,7 +30,6 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
 
     private RecyclerView mRecyclerView = null;
     private IconTextView mIconTextView = null;
-
     @Override
     public Object setLayout() {
         return R.layout.delegate_address;

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * 省市区解析辅助类
@@ -149,12 +150,17 @@ public class CityParseHelper {
 
     }
 
+    private WeakHashMap<String, String> mWeakHashMap = new WeakHashMap<>();
+    public WeakHashMap<String, String> getIdName() {
+        return this.mWeakHashMap;
+    }
+
     /**
      * 初始化数据，解析json数据
      */
     public void initData(Context context) {
 
-        String cityJson = utils.getJson(context, Constant.CITY_DATA).replace(" ","");
+        String cityJson = utils.getJson(context, Constant.CITY_DATA).replace(" ", "");
         Type type = new TypeToken<ArrayList<ProvinceBean>>() {
         }.getType();
 
@@ -184,7 +190,7 @@ public class CityParseHelper {
         mProvinceBeenArray = new ProvinceBean[mProvinceBeanArrayList.size()];
 
         for (int p = 0; p < mProvinceBeanArrayList.size(); p++) {
-
+            mWeakHashMap.put(mProvinceBeanArrayList.get(p).getId(),mProvinceBeanArrayList.get(p).getName());
             //遍历每个省份
             ProvinceBean itemProvince = mProvinceBeanArrayList.get(p);
 
@@ -197,6 +203,7 @@ public class CityParseHelper {
             //遍历当前省份下面城市的所有数据
             for (int j = 0; j < cityList.size(); j++) {
                 cityNames[j] = cityList.get(j);
+                mWeakHashMap.put(cityNames[j].getId(),cityNames[j].getName());
 
                 //当前省份下面每个城市下面再次对应的区或者县
                 List<DistrictBean> districtList = cityList.get(j).getCityList();
@@ -206,7 +213,7 @@ public class CityParseHelper {
                 DistrictBean[] distrinctArray = new DistrictBean[districtList.size()];
 
                 for (int k = 0; k < districtList.size(); k++) {
-
+                    mWeakHashMap.put(districtList.get(k).getId(),districtList.get(k).getName());
                     // 遍历市下面所有区/县的数据
                     DistrictBean districtModel = districtList.get(k);
 

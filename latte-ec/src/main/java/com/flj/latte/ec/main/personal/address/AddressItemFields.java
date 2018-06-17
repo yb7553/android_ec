@@ -6,8 +6,10 @@ package com.flj.latte.ec.main.personal.address;
 
 public enum AddressItemFields {
     PHONE,
+    LOCATION,
     ADDRESS,
     PROVINCEID,
     CITYID,
-    DISTRICTID
+    DISTRICTID,
+    RECEIVERZIP
 }

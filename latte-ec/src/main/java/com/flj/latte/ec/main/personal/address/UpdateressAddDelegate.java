@@ -20,6 +20,7 @@ import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.IFailure;
 import com.flj.latte.net.callback.ISuccess;
+import com.flj.latte.ui.recycler.MultipleFields;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -49,8 +50,11 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
     private String receiverMobile;
     private String receiverAddress;
     private String receiverZip;
+    private String receiverlocation;
     private SwitchCompat switch_button;
     private TextView address_city;
+    private boolean isDefault = false;
+    private String id;
     AppCompatTextView title;
     private static final String ADDRESS_ID = "ADDRESS_ID";
     MultipleItemEntity entity;
@@ -65,7 +69,16 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         super.onCreate(savedInstanceState);
         final Bundle args = getArguments();
         if (args != null) {
-            //entity = args.getInt(ADDRESS_ID);
+            receiverName = args.getString("receiverName");
+            isDefault = args.getBoolean("isDefault");
+            id = args.getString("id");
+            provinceId = Integer.valueOf(args.getString("provinceId"));
+            cityId = Integer.valueOf(args.getString("cityId"));
+            districtId = Integer.valueOf(args.getString("districtId"));
+            receiverMobile = args.getString("receiverMobile");
+            receiverAddress = args.getString("receiverAddress");
+            receiverlocation = args.getString("receiverlocation");
+            receiverZip = args.getString("receiverZip");
         }
         initView(entity);
 
@@ -87,32 +100,22 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         title = $(R.id.tv_title);
         title.setText("修改地址");
         address_city = $(R.id.address_city);
-        final String addressUrl = API.Config.getDomain() + API.CONFIGNEE_CHOOSE;
-        LatteLogger.d("addressUrl", addressUrl);
-        //获取旧数据
-        final WeakHashMap<String, Object> address = new WeakHashMap<>();
-        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
-        address.put("id", mUserId);
-        final String jsonString = JSON.toJSONString(address);
-        RestClient.builder()
-                .url(addressUrl)
-                .loader(getContext())
-                .raw(jsonString)
-                .success(this)
-                .failure(new IFailure() {
-                    @Override
-                    public void onFailure() {
 
-                    }
-                })
-                .build()
-                .post();
-
+       // setText($(R.id.))
     }
 
     public static UpdateressAddDelegate create(MultipleItemEntity entity) {
         final Bundle args = new Bundle();
-        args.putString("receiverName", entity.getField("receiverName"));
+        args.putString("receiverName", entity.getField(MultipleFields.NAME));
+        args.putBoolean("isDefault", entity.getField(MultipleFields.TAG));
+        args.putString("id", entity.getField(MultipleFields.ID));
+        args.putString("provinceId", entity.getField(AddressItemFields.PROVINCEID));
+        args.putString("cityId", entity.getField(AddressItemFields.CITYID));
+        args.putString("receiverMobile", entity.getField(AddressItemFields.PHONE));
+        args.putString("receiverAddress", entity.getField(AddressItemFields.ADDRESS));
+        args.putString("receiverlocation", entity.getField(AddressItemFields.LOCATION));
+        args.putString("districtId", entity.getField(AddressItemFields.DISTRICTID));
+        args.putString("receiverZip", entity.getField(AddressItemFields.RECEIVERZIP));
         final UpdateressAddDelegate delegate = new UpdateressAddDelegate();
         delegate.setArguments(args);
         return delegate;
@@ -184,8 +187,11 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
     }
 
     private String getText(EditText view) {
-
         return view.getText().toString().trim();
+    }
+
+    private void setText(TextView view, String msg) {
+        view.setText(msg);
     }
 
     @Override
