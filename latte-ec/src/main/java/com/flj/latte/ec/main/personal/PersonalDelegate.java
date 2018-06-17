@@ -1,5 +1,6 @@
 package com.flj.latte.ec.main.personal;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.flj.latte.delegates.bottom.BottomItemDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.main.personal.address.AddressDelegate;
@@ -20,10 +22,13 @@ import com.flj.latte.ec.main.personal.settings.AboutDelegate;
 import com.flj.latte.ec.main.personal.settings.SettingsDelegate;
 import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.ec.sign.SignUpdateDelegate;
+import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by yb
@@ -33,6 +38,8 @@ public class PersonalDelegate extends BottomItemDelegate {
 
     public static final String ORDER_TYPE = "ORDER_TYPE";
     private Bundle mArgs = null;
+
+    private CircleImageView mCircleImageView= null;
 
     @Override
     public Object setLayout() {
@@ -69,13 +76,21 @@ public class PersonalDelegate extends BottomItemDelegate {
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
 
         final RecyclerView rvSettings = $(R.id.rv_personal_setting);
+        mCircleImageView=$(R.id.img_user_avatar);
+
+
+        Glide.with(getContext())
+                .load(LattePreference.getCustomAppProfile("avatar"))
+                .into(mCircleImageView);
+
+
         $(R.id.tv_all_order).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickAllOrder();
             }
         });
-        $(R.id.img_user_avatar).setOnClickListener(new View.OnClickListener() {
+        $(R.id.img_user_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickAvatar();
