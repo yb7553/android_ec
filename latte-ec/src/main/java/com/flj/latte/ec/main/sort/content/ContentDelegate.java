@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.flj.latte.ec.R;
 import com.flj.latte.delegates.LatteDelegate;
+import com.flj.latte.ec.R;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 
@@ -23,7 +23,6 @@ public class ContentDelegate extends LatteDelegate {
     private static final String ARG_CONTENT_ID = "CONTENT_ID";
     private int mContentId = -1;
     private List<SectionBean> mData = null;
-
     private RecyclerView mRecyclerView = null;
 
     @Override
@@ -57,8 +56,10 @@ public class ContentDelegate extends LatteDelegate {
                         mData = new SectionDataConverter().convert(response);
                         final SectionAdapter sectionAdapter =
                                 new SectionAdapter(R.layout.item_section_content,
-                                        R.layout.item_section_header, mData);
+                                        R.layout.item_section_header, mData, mRecyclerView);
                         mRecyclerView.setAdapter(sectionAdapter);
+                        // mRecyclerView.addOnItemTouchListener(SortItemClickListener.create(ContentDelegate.this,mData));
+
                     }
                 })
                 .build()
@@ -70,6 +71,7 @@ public class ContentDelegate extends LatteDelegate {
         mRecyclerView = $(R.id.rv_list_content);
         final StaggeredGridLayoutManager manager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//不设置的话，图片闪烁错位，有可能有整列错位的情况。
         mRecyclerView.setLayoutManager(manager);
         initData();
     }

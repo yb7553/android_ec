@@ -28,6 +28,9 @@ public class AddressDataConverter extends DataConverter {
             final String phone = data.getString("receiverMobile");
             final String address = data.getString("receiverAddress");
             final boolean isDefault = data.getBoolean("receiverDefault");
+            final int provinceId = data.getInteger("provinceId");
+            final int cityId = data.getInteger("cityId");
+            final int districtId = data.getInteger("districtId");
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(AddressItemType.ITEM_ADDRESS)
@@ -36,6 +39,9 @@ public class AddressDataConverter extends DataConverter {
                     .setField(MultipleFields.TAG, isDefault)
                     .setField(AddressItemFields.ADDRESS, address)
                     .setField(AddressItemFields.PHONE, phone)
+                    .setField(AddressItemFields.PROVINCEID, provinceId)
+                    .setField(AddressItemFields.CITYID, cityId)
+                    .setField(AddressItemFields.DISTRICTID, districtId)
                     .build();
             ENTITIES.add(entity);
         }

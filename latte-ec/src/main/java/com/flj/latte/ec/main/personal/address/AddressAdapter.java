@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
-
 import com.alibaba.fastjson.JSON;
 import com.flj.latte.dialog.CommomDialog;
 import com.flj.latte.ec.R;
@@ -16,7 +15,6 @@ import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.ui.recycler.MultipleRecyclerAdapter;
 import com.flj.latte.ui.recycler.MultipleViewHolder;
 import com.flj.latte.util.log.LatteLogger;
-import com.flj.latte.util.storage.LattePreference;
 
 import java.util.List;
 import java.util.WeakHashMap;
@@ -47,6 +45,13 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView phoneText = holder.getView(R.id.tv_address_phone);
                 final AppCompatTextView addressText = holder.getView(R.id.tv_address_address);
                 final AppCompatTextView deleteTextView = holder.getView(R.id.tv_address_delete);
+                final AppCompatTextView updateTextView=holder.getView(R.id.tv_address_update);
+                updateTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
                 deleteTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

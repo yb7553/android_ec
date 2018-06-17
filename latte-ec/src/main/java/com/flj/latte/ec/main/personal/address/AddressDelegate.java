@@ -7,12 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.LogUtils;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
-import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
@@ -27,10 +26,10 @@ import java.util.WeakHashMap;
  * Created by yb
  */
 
-public class AddressDelegate extends LatteDelegate implements ISuccess,View.OnClickListener {
+public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnClickListener {
 
     private RecyclerView mRecyclerView = null;
-    private IconTextView mIconTextView =null;
+    private IconTextView mIconTextView = null;
 
     @Override
     public Object setLayout() {
@@ -40,14 +39,14 @@ public class AddressDelegate extends LatteDelegate implements ISuccess,View.OnCl
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         mRecyclerView = $(R.id.rv_address);
-        mIconTextView =$(R.id.icon_address_add);
+        mIconTextView = $(R.id.icon_address_add);
         $(R.id.icon_address_add).setOnClickListener(this);
 
         final String addressUrl = API.Config.getDomain() + API.CONFIGNEE_CHOOSE;
         LatteLogger.d("addressUrl", addressUrl);
         final WeakHashMap<String, Object> address = new WeakHashMap<>();
-        final Long mUserId= LattePreference.getCustomAppProfileLong("userId");
-        address.put("id",mUserId);
+        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        address.put("userId", mUserId);
         final String jsonString = JSON.toJSONString(address);
         RestClient.builder()
                 .url(addressUrl)
@@ -60,7 +59,7 @@ public class AddressDelegate extends LatteDelegate implements ISuccess,View.OnCl
 
     @Override
     public void onSuccess(String response) {
-        LatteLogger.d("AddressDelegate", response);
+        LogUtils.e("AddressDelegate", response);
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
         final List<MultipleItemEntity> data =
@@ -77,6 +76,7 @@ public class AddressDelegate extends LatteDelegate implements ISuccess,View.OnCl
         }
     }
 
+   // private int recode = 100;
     private void onClickAddressAdd() {
         getSupportDelegate().start(new AddressAddDelegate());
     }

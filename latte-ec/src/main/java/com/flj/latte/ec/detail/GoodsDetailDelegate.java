@@ -20,22 +20,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.convenientbanner.ConvenientBanner;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.daimajia.androidanimations.library.YoYo;
-
-import com.flj.latte.app.AccountManager;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
-import com.flj.latte.ec.main.cart.ShopCartDelegate;
+import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.ec.main.cart.ShopCartDetailDelegate;
-import com.flj.latte.ec.main.cart.ShopOrderDelegate;
-import com.flj.latte.ec.pay.FastPay;
 import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.net.RestClient;
+import com.flj.latte.net.callback.IFailure;
 import com.flj.latte.net.callback.ISuccess;
-import com.flj.latte.ui.animation.BezierAnimation;
 import com.flj.latte.ui.animation.BezierUtil;
 import com.flj.latte.ui.banner.HolderCreator;
 import com.flj.latte.ui.widget.CircleTextView;
@@ -47,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -69,13 +63,13 @@ public class GoodsDetailDelegate extends LatteDelegate implements
 
     private static final String ARG_GOODS_ID = "ARG_GOODS_ID";
     private int mGoodsId = -1;
-    private String mGoodesName="";
-    private double mGoodesPirce=0;
+    private String mGoodesName = "";
+    private double mGoodesPirce = 0;
 
     private String mGoodsThumbUrl = null;
     private int mShopCount = 0;
 
-    private JSONObject mData =null;
+    private JSONObject mData = null;
 
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -95,7 +89,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
     private void onClickAddShopCart() {
 
         //final String mToken=LattePreference.getCustomAppProfile("token");
-        final  boolean mSign=LattePreference.getAppFlag("SIGN_TAG");
+        final boolean mSign = LattePreference.getAppFlag("SIGN_TAG");
         if (mSign) {
 
 
@@ -110,15 +104,14 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                     .setGoodsId(mGoodsId)
                     .setGoodsDetail(mData)
                     .beginSkuDialog();
-        }else
-        {
+        } else {
             getSupportDelegate().start(new SignInDelegate());
         }
     }
 
     private void onClickShopCart() {
 
-        if (LattePreference.getCustomAppProfile("token")!= null) {
+        if (LattePreference.getCustomAppProfile("token") != null) {
             getSupportDelegate().start(new ShopCartDetailDelegate());
 
         }
@@ -189,29 +182,39 @@ public class GoodsDetailDelegate extends LatteDelegate implements
         final String goodesdetailUrl = "http://120.79.230.229/bfwl-mall/calmdown/v2/ecapi.product.detail";
         LatteLogger.d("IUDHAS", goodesdetailUrl);
         final WeakHashMap<String, Object> goodesdetail = new WeakHashMap<>();
-        goodesdetail.put("id",mGoodsId);
+        //TODO:mGoodsId 测试
+        mGoodsId=97;
+        goodesdetail.put("id", mGoodsId);
         final String jsonString = JSON.toJSONString(goodesdetail);
 
         RestClient.builder()
                 .url(goodesdetailUrl)
                 //.params("goods_id", mGoodsId)
                 .raw(jsonString)
-               // .loader(getContext())
+                // .loader(getContext())
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
                         LatteLogger.json("goodesdetail", response);
                         mData =
-                            JSON.parseObject(response).getJSONObject("data");
-
+                                JSON.parseObject(response).getJSONObject("data");
+                        if (null == mData) {
+                            return;
+                        }
                         mGoodesName = mData.getString("name");
                         mGoodesPirce = mData.getDouble("price");
-                    initBanner(mData);
-                    initGoodsInfo(mData);
-                    initPager(mData);
-                    setShopCartCount(mData);
+                        initBanner(mData);
+                        initGoodsInfo(mData);
+                        initPager(mData);
+                        setShopCartCount(mData);
                     }
 
+                })
+                .failure(new IFailure() {
+                    @Override
+                    public void onFailure() {
+                        ToastUtil.show(getContext(), "服务器忙，请稍后再试");
+                    }
                 })
                 .build()
                 .post();
@@ -259,16 +262,16 @@ public class GoodsDetailDelegate extends LatteDelegate implements
         final String addcartUrl = "http://120.79.230.229/bfwl-mall/calmdown/v2/ecapi.cart.insert";
         LatteLogger.d("addcart", addcartUrl);
         final WeakHashMap<String, Object> addcart = new WeakHashMap<>();
-        final Long mUserId=LattePreference.getCustomAppProfileLong("userId");
-        addcart.put("userId",mUserId);
-        addcart.put("goods_id",mGoodsId);
-        addcart.put("goods_sn","sn");
-        addcart.put("goods_name",mGoodesName);
-        addcart.put("market_price",mGoodesPirce);
-        addcart.put("goods_price",mGoodesPirce);
-        addcart.put("goods_number",1);
-        addcart.put("goods_attr_id",1);
-        addcart.put("goods_attr","测试");
+        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        addcart.put("userId", mUserId);
+        addcart.put("goods_id", mGoodsId);
+        addcart.put("goods_sn", "sn");
+        addcart.put("goods_name", mGoodesName);
+        addcart.put("market_price", mGoodesPirce);
+        addcart.put("goods_price", mGoodesPirce);
+        addcart.put("goods_number", 1);
+        addcart.put("goods_attr_id", 1);
+        addcart.put("goods_attr", "测试");
 
         final String jsonString = JSON.toJSONString(addcart);
 
@@ -287,7 +290,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                         }
                     }
                 })
-               // .params("count", mShopCount)
+                // .params("count", mShopCount)
                 .build()
                 .post();
     }
