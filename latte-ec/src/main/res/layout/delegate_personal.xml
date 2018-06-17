@@ -16,6 +16,7 @@
         </RelativeLayout>
         <!--头像部分-->
         <RelativeLayout
+            android:id="@+id/img_user_all"
             android:layout_width="match_parent"
             android:layout_height="85dp"
             android:layout_marginTop="-45dp"

@@ -85,8 +85,8 @@ public class CameraHandler implements View.OnClickListener {
                      FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
             final Uri realUri = Uri.fromFile(realFile);
 
-            CameraImageBean.getInstance().setPath(uri);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            CameraImageBean.getInstance().setPath(realUri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, realUri);
 
 
 //            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
@@ -109,7 +109,7 @@ public class CameraHandler implements View.OnClickListener {
 //            CameraImageBean.getInstance().setPath(uri);
 //
 //            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-//            // 授予目录临时共享权限
+            // 授予目录临时共享权限
 //            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
 //                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } else {

@@ -89,13 +89,14 @@ public class UserProfileClickListener extends SimpleClickListener {
 
                                                         .url(url)
                                                         //.params("avatar", path)
-                                                        //.loader(DELEGATE.getContext())
+                                                        .loader(DELEGATE.getContext())
                                                         .raw(jsonString)
                                                         .success(new ISuccess() {
                                                             @Override
                                                             public void onSuccess(String response) {
                                                                 //获取更新后的用户信息，然后更新本地数据库
                                                                 //没有本地数据的APP，每次打开APP都请求API，获取信息
+                                                                LatteLogger.d("ON_CROP3", response);
                                                                 LattePreference.addCustomAppProfile("avatar", path);
                                                             }
                                                         })

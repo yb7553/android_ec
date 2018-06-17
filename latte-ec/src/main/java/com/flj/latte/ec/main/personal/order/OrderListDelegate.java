@@ -49,6 +49,8 @@ public class OrderListDelegate extends LatteDelegate {
 
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+
+
         RestClient.builder()
                 .loader(getContext())
                 .url("order_list.php")

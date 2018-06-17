@@ -23,9 +23,9 @@ public class OrderListDataConverter extends DataConverter {
         for (int i = 0; i < size; i++) {
             final JSONObject data = array.getJSONObject(i);
             final String thumb = data.getString("thumb");
-            final String title = data.getString("title");
-            final int id = data.getInteger("id");
-            final double price = data.getDouble("price");
+            final String title = data.getString("orderSn");
+            final int id = data.getInteger("orderId");
+            final double price = data.getDouble("orderAmount");
             final String time = data.getString("time");
 
 

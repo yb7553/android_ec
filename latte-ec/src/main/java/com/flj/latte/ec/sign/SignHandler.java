@@ -24,7 +24,7 @@ public class SignHandler {
         final long userId = profileJson.getJSONObject("user").getLong("id");
         final String name = profileJson.getJSONObject("user").getString("username");
         final String nickname = profileJson.getJSONObject("user").getString("nickname");
-        //final String avatar = profileJson.getJSONObject("user").getString("avatar");
+        final String avatar = profileJson.getJSONObject("user").getString("avatar");
         //final long gender = profileJson.getJSONObject("user").getLong("gender");
         //final String address = profileJson.getJSONObject("user").getString("address");
 
@@ -36,7 +36,7 @@ public class SignHandler {
         LattePreference.addCustomAppProfileLong("userId",userId);
         LattePreference.addCustomAppProfile("name",name);
         LattePreference.addCustomAppProfile("nickname",nickname);
-        //LattePreference.addCustomAppProfile("avatar",avatar);
+        LattePreference.addCustomAppProfile("avatar",avatar);
         //LattePreference.addCustomAppProfileLong("gender",gender);
 
     }
