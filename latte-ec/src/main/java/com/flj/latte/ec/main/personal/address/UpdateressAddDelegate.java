@@ -212,15 +212,11 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         if (response.contains("success")) {
             //加载地址界面
             ToastUtil.show(getContext(), "更新成功");
-            //getFragmentManager().popBackStack();
-            getSupportDelegate().setFragmentResult(Activity.RESULT_OK, null);
+            setFragmentResult(Activity.RESULT_OK, null);
             getSupportDelegate().pop();
-            // getFragmentManager().
-
         } else {
             ToastUtil.show(getContext(), "更新失败");
         }
-        //getActivity().finish();
     }
 
     private void showAddress() {

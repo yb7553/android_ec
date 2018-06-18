@@ -1,5 +1,6 @@
 package com.flj.latte.ec.main.personal.address;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -147,7 +148,8 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
         if(response.contains("success")){
             //加载地址界面
             ToastUtil.show(getContext(),"添加成功");
-            getFragmentManager().popBackStack();
+            setFragmentResult(Activity.RESULT_OK, null);
+            getSupportDelegate().pop();
         }else{
             ToastUtil.show(getContext(),"添加失败");
         }
