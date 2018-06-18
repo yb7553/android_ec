@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
+import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.dialog.CommomDialog;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
@@ -24,9 +25,10 @@ import java.util.WeakHashMap;
  */
 
 public class AddressAdapter extends MultipleRecyclerAdapter {
-
-    protected AddressAdapter(List<MultipleItemEntity> data) {
+    LatteDelegate delegate;
+    protected AddressAdapter(List<MultipleItemEntity> data, LatteDelegate delegate) {
         super(data);
+        this.delegate=delegate;
         addItemType(AddressItemType.ITEM_ADDRESS, R.layout.item_address);
     }
 
@@ -51,7 +53,7 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                 updateTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        delegate.getSupportDelegate().startForResult(UpdateressAddDelegate.create(entity),200);
                     }
                 });
                 deleteTextView.setOnClickListener(new View.OnClickListener() {

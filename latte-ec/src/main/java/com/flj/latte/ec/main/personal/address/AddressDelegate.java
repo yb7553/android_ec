@@ -1,5 +1,7 @@
 package com.flj.latte.ec.main.personal.address;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +32,7 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
 
     private RecyclerView mRecyclerView = null;
     private IconTextView mIconTextView = null;
+
     @Override
     public Object setLayout() {
         return R.layout.delegate_address;
@@ -40,7 +43,10 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
         mRecyclerView = $(R.id.rv_address);
         mIconTextView = $(R.id.icon_address_add);
         $(R.id.icon_address_add).setOnClickListener(this);
+        initData();
+    }
 
+    private void initData() {
         final String addressUrl = API.Config.getDomain() + API.CONFIGNEE_CHOOSE;
         LatteLogger.d("addressUrl", addressUrl);
         final WeakHashMap<String, Object> address = new WeakHashMap<>();
@@ -63,8 +69,18 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
         mRecyclerView.setLayoutManager(manager);
         final List<MultipleItemEntity> data =
                 new AddressDataConverter().setJsonData(response).convert();
-        final AddressAdapter addressAdapter = new AddressAdapter(data);
+        final AddressAdapter addressAdapter = new AddressAdapter(data, this);
         mRecyclerView.setAdapter(addressAdapter);
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 200 && Activity.RESULT_OK == resultCode) {
+            initData();
+        }
     }
 
     @Override
@@ -75,7 +91,7 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
         }
     }
 
-   // private int recode = 100;
+    // private int recode = 100;
     private void onClickAddressAdd() {
         getSupportDelegate().start(new AddressAddDelegate());
     }

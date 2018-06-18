@@ -1,8 +1,10 @@
 package com.flj.latte.ec.main.personal.address;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
@@ -54,8 +56,9 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
     private SwitchCompat switch_button;
     private TextView address_city;
     private boolean isDefault = false;
-    private String id;
+    private int id = -1;
     AppCompatTextView title;
+    private AppCompatButton update;
     private static final String ADDRESS_ID = "ADDRESS_ID";
     MultipleItemEntity entity;
 
@@ -67,26 +70,26 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         final Bundle args = getArguments();
         if (args != null) {
             receiverName = args.getString("receiverName");
             isDefault = args.getBoolean("isDefault");
-            id = args.getString("id");
-            provinceId = Integer.valueOf(args.getString("provinceId"));
-            cityId = Integer.valueOf(args.getString("cityId"));
-            districtId = Integer.valueOf(args.getString("districtId"));
+            id = args.getInt("id");
+            provinceId = args.getInt("provinceId");
+            cityId = args.getInt("cityId");
+            districtId = args.getInt("districtId");
             receiverMobile = args.getString("receiverMobile");
             receiverAddress = args.getString("receiverAddress");
             receiverlocation = args.getString("receiverlocation");
             receiverZip = args.getString("receiverZip");
         }
         initView(entity);
-
-    }
-
-    @Override
-    public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
-
         /**
          * 预先加载仿iOS滚轮实现的全部数据
          */
@@ -96,25 +99,33 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
 
     private void initView(MultipleItemEntity addressId) {
         $(R.id.address_city_layout).setOnClickListener(this);
-        $(R.id.btn_address_save).setOnClickListener(this);
+        update = $(R.id.btn_address_save);
+        address_city = $(R.id.address_city);
         title = $(R.id.tv_title);
         title.setText("修改地址");
-        address_city = $(R.id.address_city);
-
-       // setText($(R.id.))
+        setText($(R.id.address_receiverName), receiverName);
+        setText($(R.id.address_receiverMobile), receiverMobile);
+        setText($(R.id.address_city), receiverlocation);
+        setText($(R.id.address_address_detail), receiverAddress);
+        setText($(R.id.address_code), receiverZip);
+        switch_button = $(R.id.switch_button);
+        switch_button.setChecked(isDefault);
+        update.setOnClickListener(this);
+        update.setText("更新");
+        // setText($(R.id.))
     }
 
     public static UpdateressAddDelegate create(MultipleItemEntity entity) {
         final Bundle args = new Bundle();
         args.putString("receiverName", entity.getField(MultipleFields.NAME));
         args.putBoolean("isDefault", entity.getField(MultipleFields.TAG));
-        args.putString("id", entity.getField(MultipleFields.ID));
-        args.putString("provinceId", entity.getField(AddressItemFields.PROVINCEID));
-        args.putString("cityId", entity.getField(AddressItemFields.CITYID));
+        args.putInt("id", entity.getField(MultipleFields.ID));
+        args.putInt("provinceId", entity.getField(AddressItemFields.PROVINCEID));
+        args.putInt("cityId", entity.getField(AddressItemFields.CITYID));
         args.putString("receiverMobile", entity.getField(AddressItemFields.PHONE));
         args.putString("receiverAddress", entity.getField(AddressItemFields.ADDRESS));
         args.putString("receiverlocation", entity.getField(AddressItemFields.LOCATION));
-        args.putString("districtId", entity.getField(AddressItemFields.DISTRICTID));
+        args.putInt("districtId", entity.getField(AddressItemFields.DISTRICTID));
         args.putString("receiverZip", entity.getField(AddressItemFields.RECEIVERZIP));
         final UpdateressAddDelegate delegate = new UpdateressAddDelegate();
         delegate.setArguments(args);
@@ -138,7 +149,7 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         receiverMobile = getText($(R.id.address_receiverMobile));
         receiverAddress = getText($(R.id.address_address_detail));
         receiverZip = getText($(R.id.address_code));
-        switch_button = $(R.id.switch_button);
+
         if (StringUtils.isEmpty(receiverName)) {
             ToastUtil.showToast(getContext(), "请输入用户名");
             return;
@@ -155,7 +166,7 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
             ToastUtil.showToast(getContext(), "请输入邮编");
             return;
         }
-        final String addressUrl = API.Config.getDomain() + API.CONFIGNEE_ADD;
+        final String addressUrl = API.Config.getDomain() + API.CONFIGNEE_UPDATE;
         LatteLogger.d("addressUrl", addressUrl);
         final WeakHashMap<String, Object> address = new WeakHashMap<>();
         final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
@@ -168,6 +179,7 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         address.put("districtId", districtId);
         address.put("receiverAddress", receiverAddress);
         address.put("receiverZip", receiverZip);
+        address.put("id", id);
         address.put("receiverDefault", switch_button.isChecked() ? 1 : 0);
         final String jsonString = JSON.toJSONString(address);
         LogUtils.e("jsonString", jsonString);
@@ -199,19 +211,21 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
         LogUtils.e("jsonString", response);
         if (response.contains("success")) {
             //加载地址界面
-            ToastUtil.show(getContext(), "添加成功");
-            getFragmentManager().popBackStack();
+            ToastUtil.show(getContext(), "更新成功");
+            //getFragmentManager().popBackStack();
+            getSupportDelegate().setFragmentResult(Activity.RESULT_OK, null);
+            getSupportDelegate().pop();
+            // getFragmentManager().
+
         } else {
-            ToastUtil.show(getContext(), "添加失败");
+            ToastUtil.show(getContext(), "更新失败");
         }
         //getActivity().finish();
     }
 
     private void showAddress() {
-        address_city.setText("");
-        provinceId = -1;
-        cityId = -1;
-        districtId = -1;
+        if (null != address_city)
+            address_city.setText("");
         //添加默认的配置，不需要自己定义
         CityConfig cityConfig = new CityConfig.Builder().build();
         cityConfig.setShowGAT(true);

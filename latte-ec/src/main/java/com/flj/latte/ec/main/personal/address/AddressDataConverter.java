@@ -27,9 +27,9 @@ public class AddressDataConverter extends DataConverter {
             final int id = data.getInteger("id");
             final String name = data.getString("receiverName");
             final String phone = data.getString("receiverMobile");
-            String receiverProvince = data.getString("receiverProvince");
-            String receiverCity = data.getString("receiverCity");
-            String receiverDistrict = data.getString("receiverDistrict");
+            String receiverProvince = ""+data.getString("receiverProvince");
+            String receiverCity = ""+data.getString("receiverCity");
+            String receiverDistrict = ""+data.getString("receiverDistrict");
             String address = data.getString("receiverAddress");
             String loacation = receiverProvince + (receiverProvince.equals(receiverCity) ? "" : receiverCity)
                     + (receiverDistrict.equals(receiverDistrict) ? "" : receiverDistrict);
@@ -38,7 +38,7 @@ public class AddressDataConverter extends DataConverter {
             final int provinceId = data.getInteger("receiverProvinceId");
             final int cityId = data.getInteger("receiverCityId");
             final int districtId = data.getInteger("receiverDistrictId");
-            final int receiverZip = data.getInteger("receiverZip");
+            final String receiverZip = data.getString("receiverZip");
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(AddressItemType.ITEM_ADDRESS)
                     .setField(MultipleFields.ID, id)
