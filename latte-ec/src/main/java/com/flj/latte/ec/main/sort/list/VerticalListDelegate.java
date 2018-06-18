@@ -7,19 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.alibaba.fastjson.JSON;
-import com.flj.latte.ec.R;
 import com.flj.latte.delegates.LatteDelegate;
-import com.flj.latte.ec.common.http.api.API;
+import com.flj.latte.ec.R;
 import com.flj.latte.ec.main.sort.SortDelegate;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
-import com.flj.latte.util.log.LatteLogger;
-import com.flj.latte.util.storage.LattePreference;
 
 import java.util.List;
-import java.util.WeakHashMap;
 
 
 /**
@@ -62,7 +57,7 @@ public class VerticalListDelegate extends LatteDelegate {
         RestClient.builder()
                 .url("sort_list.php")
                 .loader(getContext())
-               // .raw(jsonString)
+                // .raw(jsonString)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
@@ -71,7 +66,6 @@ public class VerticalListDelegate extends LatteDelegate {
                         final SortDelegate delegate = getParentDelegate();
                         final SortRecyclerAdapter adapter = new SortRecyclerAdapter(data, delegate);
                         mRecyclerView.setAdapter(adapter);
-
                     }
                 })
                 .build()

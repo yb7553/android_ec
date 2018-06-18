@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
-
 import com.alibaba.fastjson.JSON;
+import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.dialog.CommomDialog;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
@@ -16,7 +16,6 @@ import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.ui.recycler.MultipleRecyclerAdapter;
 import com.flj.latte.ui.recycler.MultipleViewHolder;
 import com.flj.latte.util.log.LatteLogger;
-import com.flj.latte.util.storage.LattePreference;
 
 import java.util.List;
 import java.util.WeakHashMap;
@@ -26,9 +25,10 @@ import java.util.WeakHashMap;
  */
 
 public class AddressAdapter extends MultipleRecyclerAdapter {
-
-    protected AddressAdapter(List<MultipleItemEntity> data) {
+    LatteDelegate delegate;
+    protected AddressAdapter(List<MultipleItemEntity> data, LatteDelegate delegate) {
         super(data);
+        this.delegate=delegate;
         addItemType(AddressItemType.ITEM_ADDRESS, R.layout.item_address);
     }
 
@@ -39,7 +39,9 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
             case AddressItemType.ITEM_ADDRESS:
                 final String name = entity.getField(MultipleFields.NAME);
                 final String phone = entity.getField(AddressItemFields.PHONE);
-                final String address = entity.getField(AddressItemFields.ADDRESS);
+                String address = entity.getField(AddressItemFields.ADDRESS);
+                String location = entity.getField(AddressItemFields.LOCATION);
+                address = location + address;
                 final boolean isDefault = entity.getField(MultipleFields.TAG);
                 final int id = entity.getField(MultipleFields.ID);
 
@@ -47,6 +49,13 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView phoneText = holder.getView(R.id.tv_address_phone);
                 final AppCompatTextView addressText = holder.getView(R.id.tv_address_address);
                 final AppCompatTextView deleteTextView = holder.getView(R.id.tv_address_delete);
+                final AppCompatTextView updateTextView = holder.getView(R.id.tv_address_update);
+                updateTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        delegate.getSupportDelegate().startForResult(UpdateressAddDelegate.create(entity),200);
+                    }
+                });
                 deleteTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -64,7 +73,7 @@ public class AddressAdapter extends MultipleRecyclerAdapter {
                                 LatteLogger.d("addressDeleteUrl", addressDeleteUrl);
                                 final WeakHashMap<String, Object> addressDelete = new WeakHashMap<>();
                                 LatteLogger.d("addressid", id);
-                                addressDelete.put("id",id);
+                                addressDelete.put("id", id);
                                 final String jsonString = JSON.toJSONString(addressDelete);
 
                                 RestClient.builder()
