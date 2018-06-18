@@ -1,12 +1,15 @@
 package com.flj.latte.ui.camera;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -75,43 +78,49 @@ public class CameraHandler implements View.OnClickListener {
 
         //兼容7.0及以上的写法
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            final ContentValues contentValues = new ContentValues(1);
-            contentValues.put(MediaStore.Images.Media.DATA, tempFile.getPath());
-
-            final Uri uri = DELEGATE.getContext().getContentResolver().
-                     insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            //需要讲Uri路径转化为实际路径
-            final File realFile =
-                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
-            final Uri realUri = Uri.fromFile(realFile);
-
-            CameraImageBean.getInstance().setPath(realUri);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, realUri);
-
-
-//            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
-//            if (!imagePath.exists())
-//            {
-//                imagePath.mkdirs();
-//            }
-//            File picFile = new File(imagePath, "test.jpg");
+//            final ContentValues contentValues = new ContentValues(1);
+//            contentValues.put(MediaStore.Images.Media.DATA, tempFile.getPath());
 //
-//            //final Uri uri = DELEGATE.getContext().getContentResolver().
-//            //       insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-//
-//            final Uri uri =getUriForFile(DELEGATE.getContext(),"com.diabin.fastec.yanbin.fileprovider", picFile);
-//
+//            final Uri uri = DELEGATE.getContext().getContentResolver().
+//                     insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 //            //需要讲Uri路径转化为实际路径
-////             final File realFile =
-////                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
-//            //final Uri realUri = Uri.fromFile(picFile);
-//            LatteLogger.d("ON_CROP1", uri);
-//            CameraImageBean.getInstance().setPath(uri);
+//            final File realFile =
+//                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
+//            final Uri realUri = Uri.fromFile(realFile);
 //
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            // 授予目录临时共享权限
-//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//            CameraImageBean.getInstance().setPath(realUri);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, realUri);
+
+
+            File imagePath = new File(DELEGATE.getContext().getFilesDir(), "images");
+            if (!imagePath.exists())
+            {
+                imagePath.mkdirs();
+            }
+            File picFile = new File(imagePath, "test.jpg");
+
+            //final Uri uri = DELEGATE.getContext().getContentResolver().
+            //       insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+
+
+            final Uri uri =getUriForFile(DELEGATE.getContext(),"com.diabin.fastec.yanbin.fileprovider", picFile);
+            //final Uri uri = FileProvider7.getUriForFile(this, picFile);
+            //需要讲Uri路径转化为实际路径
+//             final File realFile =
+//                     FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
+            final Uri realUri = Uri.fromFile(picFile);
+            //final String imagePath =getImagePath(uri, null);
+            LatteLogger.d("ON_CROP1", uri);
+            CameraImageBean.getInstance().setPath(realUri);
+
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            //授予目录临时共享权限
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+
         } else {
             final Uri fileUri = Uri.fromFile(tempFile);
             CameraImageBean.getInstance().setPath(fileUri);
@@ -119,6 +128,20 @@ public class CameraHandler implements View.OnClickListener {
         }
         DELEGATE.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
     }
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = DELEGATE.getContext().getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+
+            cursor.close();
+        }
+        return path;
+    }
+
+
 
     private void pickPhoto() {
         final Intent intent = new Intent();
