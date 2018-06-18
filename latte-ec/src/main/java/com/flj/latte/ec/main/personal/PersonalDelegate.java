@@ -106,10 +106,15 @@ public class PersonalDelegate extends BottomItemDelegate {
 
         mCircleImageView=$(R.id.img_user_avatar);
 
+        final TextView mTextView=$(R.id.tv_user_name);
+
+        mTextView.setText(LattePreference.getCustomAppProfile("nickname"));
 
         Glide.with(getContext())
                 .load(LattePreference.getCustomAppProfile("avatar"))
                 .into(mCircleImageView);
+
+
 
         //全部订单
         $(R.id.tv_all_order).setOnClickListener(new View.OnClickListener() {
