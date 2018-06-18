@@ -1,8 +1,10 @@
 package com.diabin.fastec.yanbin;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -11,23 +13,38 @@ import com.flj.latte.activities.ProxyActivity;
 import com.flj.latte.app.AccountManager;
 import com.flj.latte.app.Latte;
 import com.flj.latte.delegates.LatteDelegate;
+import com.flj.latte.ec.account.model.AccountManagerImpl;
+import com.flj.latte.ec.account.model.IAccountManager;
+import com.flj.latte.ec.account.view.PhoneInputDialog;
+import com.flj.latte.ec.common.databus.RxBus;
+import com.flj.latte.ec.common.http.IHttpClient;
 import com.flj.latte.ec.common.http.api.API;
+import com.flj.latte.ec.common.http.impl.OkHttpClientImpl;
+import com.flj.latte.ec.common.storage.SharedPreferencesDao;
+import com.flj.latte.ec.common.util.ToastUtil;
+import com.flj.latte.ec.launcher.LauncherDelegate;
 import com.flj.latte.ec.launcher.LauncherSplash;
 import com.flj.latte.ec.lbs.presenter.IMainPresenter;
+import com.flj.latte.ec.lbs.presenter.MainPresenterImpl;
+import com.flj.latte.ec.lbs.view.IMainView;
 import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.ec.sign.ISignListener;
+import com.flj.latte.ec.sign.SignHandler;
+import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.launcher.ILauncherListener;
 import com.flj.latte.ui.launcher.OnLauncherFinishTag;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
+import com.google.gson.Gson;
 
 import java.util.WeakHashMap;
 
 import cn.jpush.android.api.JPushInterface;
 import io.rong.imkit.RongIM;
 import qiu.niorgai.StatusBarCompat;
+import rx.functions.Func1;
 
 public class ExampleActivity extends ProxyActivity implements
         ISignListener,
@@ -35,6 +52,7 @@ public class ExampleActivity extends ProxyActivity implements
 
 
     private IMainPresenter mPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +62,12 @@ public class ExampleActivity extends ProxyActivity implements
         }
         Latte.getConfigurator().withActivity(this);
         StatusBarCompat.translucentStatusBar(this, true);
-    }
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+
+
+
 
     }
+
     @Override
     protected void onDestroy() {
         RongIM.getInstance().disconnect();

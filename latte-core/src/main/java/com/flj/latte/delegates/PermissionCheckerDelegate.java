@@ -65,12 +65,12 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
     }
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void onWriteaDenied() {
-        Toast.makeText(getContext(), "不允许写文件", Toast.LENGTH_LONG).show();
+
     }
 
     @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void onWriteNever() {
-        Toast.makeText(getContext(), "永久拒绝写文件", Toast.LENGTH_LONG).show();
+
     }
 
     @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -80,12 +80,12 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
 
     @OnPermissionDenied(Manifest.permission.READ_EXTERNAL_STORAGE)
     void onRedDenied() {
-        Toast.makeText(getContext(), "不允读文件", Toast.LENGTH_LONG).show();
+
     }
 
     @OnNeverAskAgain(Manifest.permission.READ_EXTERNAL_STORAGE)
     void onRedNever() {
-        Toast.makeText(getContext(), "永久拒绝读文件", Toast.LENGTH_LONG).show();
+
     }
 
     @OnShowRationale(Manifest.permission.READ_EXTERNAL_STORAGE)

@@ -13,6 +13,7 @@ import com.flj.latte.ec.R;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.common.http.api.API;
 import com.flj.latte.net.RestClient;
+import com.flj.latte.net.callback.IError;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -71,6 +72,13 @@ public class NameDelegate extends LatteDelegate {
                             FragmentManager fm = getFragmentManager();
                             fm.popBackStack();
                         }
+                    }
+                })
+                .error(new IError() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        LatteLogger.d("updateName", code);
+                        LatteLogger.d("updateName", msg);
                     }
                 })
                 .build()

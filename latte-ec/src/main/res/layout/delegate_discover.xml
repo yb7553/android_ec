@@ -9,7 +9,9 @@
         android:layout_height="60dp"
         android:background="@drawable/shape_buttom_cart"
         android:gravity="center">
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -17,6 +19,18 @@
             android:paddingTop="6dp"
             android:text="发现详情"
             android:textSize="20sp" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/web_discovery_container_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:text="分享"
+            android:textSize="16sp" />
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.ContentFrameLayout
