@@ -22,20 +22,20 @@ public class OrderListDataConverter extends DataConverter {
         final int size = array.size();
         for (int i = 0; i < size; i++) {
             final JSONObject data = array.getJSONObject(i);
-            final String thumb = data.getString("thumb");
+            //final String thumb = data.getString("thumb");
             final String title = data.getString("orderSn");
             final int id = data.getInteger("orderId");
             final double price = data.getDouble("orderAmount");
-            final String time = data.getString("time");
+            //final String time = data.getString("time");
 
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(OrderListItemType.ITEM_ORDER_LIST)
                     .setField(MultipleFields.ID, id)
-                    .setField(MultipleFields.IMAGE_URL, thumb)
+                   // .setField(MultipleFields.IMAGE_URL, thumb)
                     .setField(MultipleFields.TITLE, title)
                     .setField(OrderItemFields.PRICE, price)
-                    .setField(OrderItemFields.TIME,time)
+                   // .setField(OrderItemFields.TIME,time)
                     .build();
 
             ENTITIES.add(entity);
