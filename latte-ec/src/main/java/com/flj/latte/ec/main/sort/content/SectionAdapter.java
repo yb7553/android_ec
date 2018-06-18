@@ -1,6 +1,7 @@
 package com.flj.latte.ec.main.sort.content;
 
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,13 +17,17 @@ import java.util.List;
  */
 
 public class SectionAdapter extends BaseSectionQuickAdapter<SectionBean, BaseViewHolder> {
-
+    private RecyclerView mRecyclerView;
+    private boolean mShouldScroll = false;
+    List<SectionBean> data;
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .dontAnimate();
 
-    public SectionAdapter(int layoutResId, int sectionHeadResId, List<SectionBean> data) {
+    public SectionAdapter(int layoutResId, int sectionHeadResId, List<SectionBean> data, RecyclerView mRecyclerView) {
         super(layoutResId, sectionHeadResId, data);
+        this.mRecyclerView=mRecyclerView;
+        this.data=data;
     }
 
     @Override
@@ -44,5 +49,7 @@ public class SectionAdapter extends BaseSectionQuickAdapter<SectionBean, BaseVie
         Glide.with(mContext)
                 .load(thumb)
                 .into(goodsImageView);
+
     }
+
 }

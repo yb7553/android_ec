@@ -77,6 +77,8 @@ public class PersonalDelegate extends BottomItemDelegate {
         mArgs = new Bundle();
     }
 
+
+
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
 
