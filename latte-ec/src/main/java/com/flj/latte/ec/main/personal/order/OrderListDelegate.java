@@ -33,8 +33,6 @@ public class OrderListDelegate extends LatteDelegate {
 
     private RecyclerView mRecyclerView = null;
 
-    private Integer mOrderType = null;
-
     @Override
     public Object setLayout() {
         return R.layout.delegate_order_list;
@@ -62,8 +60,33 @@ public class OrderListDelegate extends LatteDelegate {
         String url = API.Config.getDomain() + API.ORDER_LIST;
         LatteLogger.d("url",url);
         final WeakHashMap<String, Object> weakHashMap = new WeakHashMap<>();
-        weakHashMap.put("page",1);
-        weakHashMap.put("per_page",10);
+        switch (mType){
+            case "all":
+                weakHashMap.put("page",1);
+                weakHashMap.put("per_page",10);
+                break;
+            case "pay":
+                weakHashMap.put("page",1);
+                weakHashMap.put("per_page",10);
+                weakHashMap.put("status",0);
+                break;
+            case "receive":
+                weakHashMap.put("page",1);
+                weakHashMap.put("per_page",10);
+                weakHashMap.put("status",1);
+                break;
+            case "evaluate":
+                weakHashMap.put("page",1);
+                weakHashMap.put("per_page",10);
+                weakHashMap.put("status",2);
+                break;
+            case "after_market":
+                weakHashMap.put("page",1);
+                weakHashMap.put("per_page",10);
+                weakHashMap.put("status",3);
+                break;
+        }
+
         final String jsonString = JSON.toJSONString(weakHashMap);
 
 

@@ -1,5 +1,8 @@
 package com.flj.latte.ec.main.personal.settings;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +18,9 @@ import com.flj.latte.ec.common.http.api.API;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.IError;
 import com.flj.latte.net.callback.ISuccess;
+import com.flj.latte.util.callback.CallbackManager;
+import com.flj.latte.util.callback.CallbackType;
+import com.flj.latte.util.callback.IGlobalCallback;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
 
@@ -28,10 +34,19 @@ public class NameDelegate extends LatteDelegate {
 
     private AppCompatTextView mName = null;
     private AppCompatEditText mNameEdit =null;
+    private MyListerner listerner=null;
+
     @Override
     public Object setLayout() {
         return R.layout.delegate_name;
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //listerner=(MyListerner) getSupportDelegate().getActivity();
+    }
+
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
@@ -48,6 +63,8 @@ public class NameDelegate extends LatteDelegate {
     }
 
     private void onClickUserName(){
+
+
         final String updateNameUrl = API.Config.getDomain() + API.USER_NICKNAME_UPDATE;
         LatteLogger.d("updateName", updateNameUrl);
         final WeakHashMap<String, Object> updateName = new WeakHashMap<>();
@@ -69,6 +86,14 @@ public class NameDelegate extends LatteDelegate {
                         final Integer isAdded = JSON.parseObject(response).getInteger("code");
                         if (isAdded == 0) {
                             LattePreference.addCustomAppProfile("nickname", mUserName);
+                            //listerner.sendMessage("test");
+                            @SuppressWarnings("unchecked") final IGlobalCallback<String> callback = CallbackManager
+                                    .getInstance()
+                                    .getCallback(CallbackType.ON_ARGS);
+                            if (callback != null) {
+                                callback.executeCallback(mUserName);
+                            }
+
                             FragmentManager fm = getFragmentManager();
                             fm.popBackStack();
                         }
@@ -84,4 +109,13 @@ public class NameDelegate extends LatteDelegate {
                 .build()
                 .post();
     }
+
+
+    public interface MyListerner{
+        void sendMessage(String str);
+    }
+
+
+
+
 }

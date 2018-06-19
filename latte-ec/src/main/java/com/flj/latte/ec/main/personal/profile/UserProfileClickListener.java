@@ -4,9 +4,11 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.FileUtils;
@@ -119,7 +121,19 @@ public class UserProfileClickListener extends SimpleClickListener {
                 break;
             case 2:
                 final LatteDelegate nameDelegate = bean.getDelegate();
+
                 DELEGATE.getSupportDelegate().start(nameDelegate);
+                CallbackManager.getInstance()
+                        .addCallback(CallbackType.ON_ARGS, new IGlobalCallback<String>() {
+                            @Override
+                            public void executeCallback(@Nullable String args) {
+
+                                final AppCompatTextView name = (AppCompatTextView) view.findViewById(R.id.tv_arrow_value);
+                                name.setText(args);
+                            }
+
+                        });
+
 
                 break;
             case 3:

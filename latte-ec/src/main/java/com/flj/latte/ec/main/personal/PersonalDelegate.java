@@ -52,6 +52,31 @@ public class PersonalDelegate extends BottomItemDelegate {
         startOrderListByType();
     }
 
+    private void onClickPay() {
+        mArgs.putString(ORDER_TYPE, "pay");
+
+        startOrderListByType();
+    }
+
+    private void onClickReceive() {
+        mArgs.putString(ORDER_TYPE, "receive");
+
+        startOrderListByType();
+    }
+
+    private void onClickEvaluate() {
+        mArgs.putString(ORDER_TYPE, "evaluate");
+
+        startOrderListByType();
+    }
+
+    private void onClickAfterMarker() {
+        mArgs.putString(ORDER_TYPE, "after_market");
+
+        startOrderListByType();
+    }
+
+
     private void onClickAvatar() {
         getParentDelegate().getSupportDelegate().start(new UserProfileDelegate());
     }
@@ -78,20 +103,56 @@ public class PersonalDelegate extends BottomItemDelegate {
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
 
         final RecyclerView rvSettings = $(R.id.rv_personal_setting);
+
         mCircleImageView=$(R.id.img_user_avatar);
 
+        final TextView mTextView=$(R.id.tv_user_name);
+
+        mTextView.setText(LattePreference.getCustomAppProfile("nickname"));
 
         Glide.with(getContext())
                 .load(LattePreference.getCustomAppProfile("avatar"))
                 .into(mCircleImageView);
 
 
+
+        //全部订单
         $(R.id.tv_all_order).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickAllOrder();
             }
         });
+        //待付款
+        $(R.id.ll_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickPay();
+            }
+        });
+        //待发货
+        $(R.id.ll_receive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickReceive();
+            }
+        });
+        //待收货
+        $(R.id.ll_evaluate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickEvaluate();
+            }
+        });
+
+        //待评价
+        $(R.id.ll_after_market).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickAfterMarker();
+            }
+        });
+
         $(R.id.img_user_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,4 +211,8 @@ public class PersonalDelegate extends BottomItemDelegate {
         rvSettings.setAdapter(adapter);
         rvSettings.addOnItemTouchListener(new PersonalClickListener(this));
     }
+
+
+
+
 }

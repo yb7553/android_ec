@@ -246,7 +246,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="待配送"
+                    android:text="待发货"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -273,7 +273,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="配送中"
+                    android:text="待收货"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -300,7 +300,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="已完成"
+                    android:text="待评价"
                     android:textSize="10sp" />
 
             </LinearLayout>

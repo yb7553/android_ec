@@ -1,11 +1,14 @@
 package com.flj.latte.ec.main.personal.profile;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.flj.latte.delegates.LatteDelegate;
@@ -23,7 +26,7 @@ import java.util.List;
  * Created by yb
  */
 
-public class UserProfileDelegate extends LatteDelegate {
+public class UserProfileDelegate extends LatteDelegate implements NameDelegate.MyListerner {
 
     @Override
     public Object setLayout() {
@@ -77,4 +80,16 @@ public class UserProfileDelegate extends LatteDelegate {
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new UserProfileClickListener(this));
     }
+
+    @Override
+    public void sendMessage(String str) {
+        if(str!=null&&!"".equals(str)){
+            Toast.makeText(this.getContext(), str, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+
+
 }
