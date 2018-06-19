@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +33,18 @@ import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.shoppingselect.BigClassification;
+import com.shoppingselect.OnSelectedListener;
+import com.shoppingselect.ShoppingSelectView;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -46,15 +57,17 @@ import ren.qinc.numberbutton.NumberButton;
 
 
 @SuppressLint("ValidFragment")
-public class GoodsSkuDelegate extends LatteDelegate implements View.OnClickListener {
-
-
+public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListener, View.OnClickListener {
     private Activity mActivity = null;
-
     private AlertDialog mDialog = null;
     private int mGoodsID = -1;
     private JSONObject mGoodsDetail = null;
     private NumberButton mSkuCountBtn;
+    private LinearLayout mSkuAtts;//商品属性列表
+    private ShoppingSelectView shoppingselectview;
+    private TextView priceView;
+    private double baseAmout = 0.00;//基础价格
+    private double totalAmout = 0.00;//总价格
 
     private GoodsSkuDelegate(LatteDelegate delegate) {
         this.mActivity = delegate.getProxyActivity();
@@ -82,17 +95,23 @@ public class GoodsSkuDelegate extends LatteDelegate implements View.OnClickListe
             Button btn_dialog_sku_cart = window.findViewById(R.id.btn_dialog_sku_cart);
             btn_dialog_sku_cart.setOnClickListener(this);
             btn_dialog_sku_cart.setBackgroundColor(Color.parseColor("#ff9999"));
+            mSkuAtts = window.findViewById(R.id.mSkuAtrr);
+            shoppingselectview = window.findViewById(R.id.shoppingselectview);
+
             //window.findViewById(R.id.btn_dialog_pay_wechat).setOnClickListener(this);
             //window.findViewById(R.id.btn_dialog_pay_cancel).setOnClickListener(this);
 
             final ImageView imageView = window.findViewById(R.id.mGoodsIconIv);
             final TextView textView = window.findViewById(R.id.mGoodsCodeTv);
-            final TextView priceView = window.findViewById(R.id.mGoodsPriceTv);
+            priceView = window.findViewById(R.id.mGoodsPriceTv);
+            final ImageView mCloseIv = window.findViewById(R.id.mCloseIv);
+            mCloseIv.setOnClickListener(this);
             mSkuCountBtn = window.findViewById(R.id.mSkuCountBtn);
             mSkuCountBtn.setCurrentNumber(1);
             textView.setText(this.mGoodsDetail.getString("name"));
-
-            priceView.setText(Double.toString(this.mGoodsDetail.getDouble("price")));
+            baseAmout = this.mGoodsDetail.getDouble("price");
+            setSkuAtts();
+            priceView.setText(Double.toString(baseAmout));
             //final Uri uri=Uri.parse(this.mGoodsDetail.getJSONObject("default_photo").getString("large"));
             Glide.with(this.mDialog.getContext())
                     .load(this.mGoodsDetail.getJSONObject("default_photo").getString("large"))
@@ -100,6 +119,70 @@ public class GoodsSkuDelegate extends LatteDelegate implements View.OnClickListe
 
 
         }
+    }
+
+    List<BigClassification> attslist;//商品规格列表
+    WeakHashMap<String, WeakHashMap<String, String>> mWeakHashMap;
+    WeakHashMap<String, String> mchildMap;
+    WeakHashMap<String, Double> mpriceMap;
+
+    private void setSkuAtts() {
+        if (null == mGoodsDetail || (null == mGoodsDetail.getString("properties"))) {
+            mSkuAtts.setVisibility(View.GONE);
+            return;
+        }
+        String attsJson = mGoodsDetail.getString("properties");
+        Type type = new TypeToken<ArrayList<BigClassification>>() {
+        }.getType();
+        attslist = new Gson().fromJson(attsJson, type);
+        //设置监听需要在设置数据之前
+        shoppingselectview.setOnSelectedListener(this);
+        shoppingselectview.setData(attslist);
+        //TODO:测试金额累加，id 96
+        attslist.get(0).getList().get(2).setAttr_price("10.02");
+        attslist.get(1).getList().get(2).setAttr_price("10.02");
+        attslist.get(1).getList().get(3).setAttr_price("1.02");
+        //累计默认选中第一项金额
+        totalAmout = baseAmout;
+        for (BigClassification bigClassification :
+                attslist) {
+            java.math.BigDecimal d1=new java.math.BigDecimal(String.valueOf(totalAmout));
+            java.math.BigDecimal d2=new java.math.BigDecimal(bigClassification.getList().get(0).getAttr_price());
+            totalAmout = d1.add(d2).doubleValue();
+        }
+        priceView.setText(Double.toString(totalAmout));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onSelected(String title, String smallTitle) {
+        //商品规格选择回调
+        //priceView.setText(Double.toString(this.mGoodsDetail.getDouble("price")));
+        totalAmout = baseAmout;
+        for (int i = 0; i < attslist.size(); i++) {
+            if (attslist.get(i).getName().trim().contentEquals(title.trim())) {
+                for (int j = 0; j < attslist.get(i).getList().size(); j++) {
+                    if (attslist.get(i).getList().get(j).getName().trim().contentEquals(smallTitle.trim())) {
+                        attslist.get(i).getList().get(j).setSelect(true);
+                    } else {
+                        attslist.get(i).getList().get(j).setSelect(false);
+                    }
+                }
+            }
+        }
+        //累计选中金额
+        for (BigClassification bigClassification :
+                attslist) {
+            for (BigClassification.SmallClassification smallClassification :
+                    bigClassification.getList()) {
+                if(smallClassification.isSelect()){
+                    java.math.BigDecimal d1=new java.math.BigDecimal(String.valueOf(totalAmout));
+                    java.math.BigDecimal d2=new java.math.BigDecimal(smallClassification.getAttr_price());
+                    totalAmout = d1.add(d2).doubleValue();
+                }
+            }
+        }
+        priceView.setText(Double.toString(totalAmout));
     }
 
     public GoodsSkuDelegate setGoodsId(int goodsId) {
@@ -121,15 +204,11 @@ public class GoodsSkuDelegate extends LatteDelegate implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.mCloseIv) {
-
             mDialog.cancel();
-
         } else if (id == R.id.mSkuView) {
             addSku(mGoodsID);
-
             //加入购物车
         } else if (id == R.id.btn_dialog_sku_cart) {
-
             //上送报文指 平台
             postSkuCart();
 
@@ -226,4 +305,6 @@ public class GoodsSkuDelegate extends LatteDelegate implements View.OnClickListe
             }
         });
     }
+
+
 }

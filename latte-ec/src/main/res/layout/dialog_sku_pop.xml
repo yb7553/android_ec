@@ -13,11 +13,11 @@
             android:id="@+id/mCloseIv"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:scaleType="fitXY"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/common_margin"
-            android:background="@drawable/add_cart_pop_close"/>
+            android:background="@drawable/add_cart_pop_close"
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/mGoodsIconIv"
@@ -52,11 +52,34 @@
             android:layout_below="@id/mDividerView"
             android:layout_margin="@dimen/common_margin"/>
 
+        <LinearLayout
+            android:id="@+id/mSkuAtrr"
+            style="@style/MatchWrap.Vertical"
+            android:layout_below="@id/mDividerView"
+            android:layout_margin="10dp">
+
+            <TextView
+                style="@style/WrapWrap"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/common_margin_small"
+                android:text="类型"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/text_small_size"/>
+
+            <com.shoppingselect.ShoppingSelectView
+                android:id="@+id/shoppingselectview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="3"
+                android:paddingBottom="20dp"
+                android:paddingTop="10dp"/>
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/rl_sku_amount"
             style="@style/MatchWrap"
             android:layout_alignLeft="@id/mSkuView"
-            android:layout_below="@id/mSkuView">
+            android:layout_below="@id/mSkuAtrr">
 
             <TextView
                 style="@style/WrapWrap"
