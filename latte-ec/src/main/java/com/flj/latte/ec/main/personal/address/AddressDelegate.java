@@ -1,7 +1,5 @@
 package com.flj.latte.ec.main.personal.address;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,17 +70,14 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
         final AddressAdapter addressAdapter = new AddressAdapter(data, this);
         mRecyclerView.setAdapter(addressAdapter);
     }
-
-
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 200 && Activity.RESULT_OK == resultCode) {
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == 200 && resultCode == RESULT_OK ) {
+            // 在此通过Bundle data 获取返回的数据
             initData();
         }
     }
-
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -93,6 +88,6 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
 
     // private int recode = 100;
     private void onClickAddressAdd() {
-        getSupportDelegate().start(new AddressAddDelegate());
+        getSupportDelegate().startForResult(new AddressAddDelegate(),200);
     }
 }

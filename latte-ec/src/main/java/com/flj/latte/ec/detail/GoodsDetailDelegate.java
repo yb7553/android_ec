@@ -183,10 +183,9 @@ public class GoodsDetailDelegate extends LatteDelegate implements
         LatteLogger.d("IUDHAS", goodesdetailUrl);
         final WeakHashMap<String, Object> goodesdetail = new WeakHashMap<>();
         //TODO:mGoodsId 测试
-        mGoodsId=97;
+        mGoodsId=96;
         goodesdetail.put("id", mGoodsId);
         final String jsonString = JSON.toJSONString(goodesdetail);
-
         RestClient.builder()
                 .url(goodesdetailUrl)
                 //.params("goods_id", mGoodsId)
