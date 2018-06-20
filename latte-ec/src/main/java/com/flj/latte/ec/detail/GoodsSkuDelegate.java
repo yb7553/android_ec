@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,12 +22,15 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.util.ToastUtil;
+import com.flj.latte.ec.main.cart.ShopCartDelegate;
 import com.flj.latte.net.RestClient;
+import com.flj.latte.net.callback.IFailure;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -68,6 +69,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     private TextView priceView;
     private double baseAmout = 0.00;//基础价格
     private double totalAmout = 0.00;//总价格
+    private String attsStr = "";//属性集合，* 号分隔
 
     private GoodsSkuDelegate(LatteDelegate delegate) {
         this.mActivity = delegate.getProxyActivity();
@@ -77,10 +79,10 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     public static GoodsSkuDelegate create(LatteDelegate delegate) {
         return new GoodsSkuDelegate(delegate);
     }
-
+     Window window;
     public void beginSkuDialog() {
         mDialog.show();
-        final Window window = mDialog.getWindow();
+        window = mDialog.getWindow();
         if (window != null) {
             window.setContentView(R.layout.dialog_sku_pop);
             window.setGravity(Gravity.BOTTOM);
@@ -111,7 +113,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
             textView.setText(this.mGoodsDetail.getString("name"));
             baseAmout = this.mGoodsDetail.getDouble("price");
             setSkuAtts();
-            priceView.setText(Double.toString(baseAmout));
+            priceView.setText(Double.toString(totalAmout));
             //final Uri uri=Uri.parse(this.mGoodsDetail.getJSONObject("default_photo").getString("large"));
             Glide.with(this.mDialog.getContext())
                     .load(this.mGoodsDetail.getJSONObject("default_photo").getString("large"))
@@ -122,9 +124,6 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     }
 
     List<BigClassification> attslist;//商品规格列表
-    WeakHashMap<String, WeakHashMap<String, String>> mWeakHashMap;
-    WeakHashMap<String, String> mchildMap;
-    WeakHashMap<String, Double> mpriceMap;
 
     private void setSkuAtts() {
         if (null == mGoodsDetail || (null == mGoodsDetail.getString("properties"))) {
@@ -139,26 +138,27 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         shoppingselectview.setOnSelectedListener(this);
         shoppingselectview.setData(attslist);
         //TODO:测试金额累加，id 96
-        attslist.get(0).getList().get(2).setAttr_price("10.02");
+        attslist.get(0).getList().get(0).setAttr_price("10.02");
         attslist.get(1).getList().get(2).setAttr_price("10.02");
         attslist.get(1).getList().get(3).setAttr_price("1.02");
         //累计默认选中第一项金额
         totalAmout = baseAmout;
         for (BigClassification bigClassification :
                 attslist) {
-            java.math.BigDecimal d1=new java.math.BigDecimal(String.valueOf(totalAmout));
-            java.math.BigDecimal d2=new java.math.BigDecimal(bigClassification.getList().get(0).getAttr_price());
-            totalAmout = d1.add(d2).doubleValue();
+                java.math.BigDecimal d1 = new java.math.BigDecimal(String.valueOf(totalAmout));
+                java.math.BigDecimal d2 = new java.math.BigDecimal(bigClassification.getList().get(0).getAttr_price());
+                totalAmout = d1.add(d2).doubleValue();
+                attsStr = attsStr + "*" + bigClassification.getList().get(0).getName();
         }
-        priceView.setText(Double.toString(totalAmout));
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onSelected(String title, String smallTitle) {
         //商品规格选择回调
         //priceView.setText(Double.toString(this.mGoodsDetail.getDouble("price")));
         totalAmout = baseAmout;
+        attsStr = "";
         for (int i = 0; i < attslist.size(); i++) {
             if (attslist.get(i).getName().trim().contentEquals(title.trim())) {
                 for (int j = 0; j < attslist.get(i).getList().size(); j++) {
@@ -175,10 +175,11 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
                 attslist) {
             for (BigClassification.SmallClassification smallClassification :
                     bigClassification.getList()) {
-                if(smallClassification.isSelect()){
-                    java.math.BigDecimal d1=new java.math.BigDecimal(String.valueOf(totalAmout));
-                    java.math.BigDecimal d2=new java.math.BigDecimal(smallClassification.getAttr_price());
+                if (smallClassification.isSelect()) {
+                    java.math.BigDecimal d1 = new java.math.BigDecimal(String.valueOf(totalAmout));
+                    java.math.BigDecimal d2 = new java.math.BigDecimal(smallClassification.getAttr_price());
                     totalAmout = d1.add(d2).doubleValue();
+                    attsStr = attsStr + "*" + smallClassification.getName();
                 }
             }
         }
@@ -196,7 +197,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     }
 
     private void addSku(int goodsId) {
-
+        getSupportDelegate().popTo(ShopCartDelegate.class, true);
     }
 
 
@@ -222,14 +223,25 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
         addcart.put("userId", mUserId);
         addcart.put("goods_id", mGoodsID);
-        addcart.put("goods_sn", this.mGoodsDetail.getString("goods_id"));
+        addcart.put("goods_sn", mGoodsID);
         addcart.put("goods_name", this.mGoodsDetail.getString("name"));
         addcart.put("market_price", this.mGoodsDetail.getDoubleValue("price"));
-        addcart.put("goods_price", "");
-        addcart.put("goods_number", 1);
-        addcart.put("goods_attr_id", 1);
-        addcart.put("goods_attr", "测试");
+        addcart.put("goods_price", totalAmout);
+        addcart.put("goods_number", mSkuCountBtn.getNumber());
+        if (null == attslist) {
+            ToastUtil.showToast(getProxyActivity(), "数据有误，请稍后再试");
+            return;
+        }
+        addcart.put("goods_attr_id", attslist.get(0).getList().get(0).getId());
+
+        if (StringUtils.isEmpty(attsStr)) {
+
+            ToastUtil.show(getContext(), "服务器忙，请稍后再试");
+            return;
+        }
+        addcart.put("goods_attr", attsStr.startsWith("*") ? attsStr.substring(1) : attsStr);
         final String jsonString = JSON.toJSONString(addcart);
+        LogUtils.e(""+jsonString);
         RestClient.builder()
                 .url(addcartUrl)
                 .raw(jsonString)
@@ -241,8 +253,16 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
                         final String tip = JSON.parseObject(response).getString("msg");
                         if (isAdded == 0 && !StringUtils.isEmpty(tip)) {
                             mDialog.cancel();
-                            ToastUtil.showToast(getContext(), "加入" + tip);
+                            ToastUtil.showToast(window.getContext(), "添加成功");
+                        }else{
+                            ToastUtil.showToast(window.getContext(), "" + tip);
                         }
+                    }
+                })
+                .failure(new IFailure() {
+                    @Override
+                    public void onFailure() {
+                        ToastUtil.showToast(getProxyActivity(), "购物车添加失败" );
                     }
                 })
                 .build()

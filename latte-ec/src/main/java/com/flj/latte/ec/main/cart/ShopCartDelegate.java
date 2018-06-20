@@ -14,18 +14,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-
-import com.alibaba.fastjson.JSONObject;
 import com.flj.latte.delegates.bottom.BottomItemDelegate;
-import com.flj.latte.delegates.web.WebDelegateImpl;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
 import com.flj.latte.ec.main.EcBottomDelegate;
-import com.flj.latte.ec.pay.FastPay;
 import com.flj.latte.ec.pay.IAlPayResultListener;
-import com.flj.latte.ec.sign.SignForgetDelegate;
 import com.flj.latte.net.RestClient;
-import com.flj.latte.net.callback.IError;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
@@ -197,7 +191,6 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         final Long mUserId=LattePreference.getCustomAppProfileLong("userId");
         LatteLogger.d("shopcart", shopcartUrl);
         final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
-
         shopcart.put("userId",mUserId);
         final String jsonString = JSON.toJSONString(shopcart);
 
@@ -268,15 +261,11 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         int i = view.getId();
         if (i == R.id.icon_shop_cart_select_all) {
             onClickSelectAll();
-
         } else if (i == R.id.tv_top_shop_cart_remove_selected) {
             onClickRemoveSelectedItem();
-
         } else if (i == R.id.tv_top_shop_cart_clear) {
             onClickClear();
-
         } else if (i == R.id.tv_shop_cart_pay) {
-
             createOrder();
             onClickShopOrder();
 
