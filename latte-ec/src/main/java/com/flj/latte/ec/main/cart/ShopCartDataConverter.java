@@ -20,7 +20,8 @@ public class ShopCartDataConverter extends DataConverter {
 
         final ArrayList<MultipleItemEntity> dataList = new ArrayList<>();
         final JSONArray dataArray = JSON.parseObject(getJsonData()).getJSONArray("data");
-
+        //防止用户初次注册，点击购物车崩溃的bug
+        if (null == dataArray) return null;
         final int size = dataArray.size();
         for (int i = 0; i < size; i++) {
             final JSONObject data = dataArray.getJSONObject(i);
@@ -29,7 +30,7 @@ public class ShopCartDataConverter extends DataConverter {
             //final String desc = data.getString("desc");
             final String desc = data.getJSONObject("product").getString("name");
             ///final String title = data.getString("title");
-            final String title =data.getJSONObject("product").getString("name");
+            final String title = data.getJSONObject("product").getString("name");
             final int id = data.getInteger("id");
             final int count = data.getInteger("amount");
             final double price = data.getDouble("price");

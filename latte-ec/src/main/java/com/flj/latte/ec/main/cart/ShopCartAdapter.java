@@ -38,6 +38,8 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
 
     ShopCartAdapter(List<MultipleItemEntity> data) {
         super(data);
+        //防止用户初次注册，点击购物车崩溃的bug
+        if (null == data) return;
         //初始化总价
         for (MultipleItemEntity entity : data) {
             final double price = entity.getField(ShopCartItemFields.PRICE);

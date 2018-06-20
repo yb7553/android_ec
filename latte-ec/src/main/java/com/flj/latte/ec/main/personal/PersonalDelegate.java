@@ -1,13 +1,11 @@
 package com.flj.latte.ec.main.personal;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.flj.latte.delegates.bottom.BottomItemDelegate;
@@ -19,10 +17,8 @@ import com.flj.latte.ec.main.personal.list.ListItemType;
 import com.flj.latte.ec.main.personal.order.OrderListDelegate;
 import com.flj.latte.ec.main.personal.profile.UserProfileDelegate;
 import com.flj.latte.ec.main.personal.settings.AboutDelegate;
-import com.flj.latte.ec.main.personal.settings.SettingsDelegate;
 import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.ec.sign.SignUpdateDelegate;
-import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
 
 import java.util.ArrayList;
@@ -106,9 +102,9 @@ public class PersonalDelegate extends BottomItemDelegate {
 
         mCircleImageView=$(R.id.img_user_avatar);
 
-        final TextView mTextView=$(R.id.tv_user_name);
+       // final TextView mTextView=$(R.id.tv_user_name);
 
-        mTextView.setText(LattePreference.getCustomAppProfile("nickname"));
+      //  mTextView.setText(LattePreference.getCustomAppProfile("nickname"));
 
         Glide.with(getContext())
                 .load(LattePreference.getCustomAppProfile("avatar"))
