@@ -3,8 +3,13 @@ package com.flj.latte.ec.sign;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.flj.latte.app.AccountManager;
+import com.flj.latte.ec.main.EcBottomDelegate;
+import com.flj.latte.net.RestClient;
+import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
+
+import java.util.WeakHashMap;
 
 /**
  * Created by yb on 2017/4/22
@@ -38,6 +43,7 @@ public class SignHandler {
         LattePreference.addCustomAppProfile("nickname",nickname);
         LattePreference.addCustomAppProfile("avatar",avatar);
         //LattePreference.addCustomAppProfileLong("gender",gender);
+        rongToken((int) userId);
 
     }
 
@@ -58,5 +64,30 @@ public class SignHandler {
         //已经注册并登录成功了
         AccountManager.setSignState(true);
         signListener.onSignUpSuccess();
+    }
+
+    private static void rongToken(Integer userId){
+        final String rongUrl = "http://120.79.230.229/bfwl-mall/calmdown/v2/ecapi.get.token";
+        LatteLogger.d("rongUrl", rongUrl);
+        final WeakHashMap<String, Object> rong = new WeakHashMap<>();
+        rong.put("userId",userId);
+
+
+        final String jsonString = JSON.toJSONString(rong);
+
+        RestClient.builder()
+                .url(rongUrl)
+                .raw(jsonString)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        LatteLogger.json("rongUrl", response);
+                        final JSONObject mData = JSON.parseObject(response).getJSONObject("data");
+                        LattePreference.addCustomAppProfile("rongtoken", mData.getString("token"));
+                        LatteLogger.json("rongUrl", LattePreference.getCustomAppProfile("rongtoken"));
+                    }
+                })
+                .build()
+                .post();
     }
 }
