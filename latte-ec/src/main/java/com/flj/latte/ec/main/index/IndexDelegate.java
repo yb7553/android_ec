@@ -30,6 +30,7 @@ import com.flj.latte.ui.recycler.BaseDecoration;
 import com.flj.latte.ui.refresh.RefreshHandler;
 import com.flj.latte.util.callback.CallbackManager;
 import com.flj.latte.util.callback.CallbackType;
+import com.flj.latte.util.storage.LattePreference;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.CSCustomServiceInfo;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.UserInfo;
 import io.rong.message.TextMessage;
@@ -67,7 +69,7 @@ public class IndexDelegate extends BottomItemDelegate implements
     //悟空  18673668974  1100
     private static final String token1 = "dW+nKsnlAJgaYlUW9GYEEmMRlYabxy6EVmDP0KKdd1ik/l6ffCLpRVr7xNrJ6VeZVT09++kymu2oEWYnly5Jvg==";
     //贝吉塔 18673668975 1101
-    private static final String token2 = "TgSE6Bv6Pj8YGxlQSXYN3gPFlex7lHcsWomgoR09WtcVRwLa1C81CKCuea80ShGAWenwB4Qd8xP/GV1gItbUPQ==";
+    private static final String token2 = LattePreference.getCustomAppProfile("rongtoken");
 
 
     private String string="";
@@ -97,8 +99,28 @@ public class IndexDelegate extends BottomItemDelegate implements
 //                startActivity(new Intent(getContext(), HomeActivity.class));
 
                 //启动会话界面
-                if (RongIM.getInstance() != null)
-                    RongIM.getInstance().startPrivateChat(getContext(), "1100", "悟空");
+//                if (RongIM.getInstance() != null)
+//                    RongIM.getInstance().startPrivateChat(getContext(), "1100", "悟空");
+
+                //首先需要构造使用客服者的用户信息
+                CSCustomServiceInfo.Builder csBuilder = new CSCustomServiceInfo.Builder();
+                CSCustomServiceInfo csInfo = csBuilder
+                        .nickName("客官莫急")
+                        .loginName(LattePreference.getCustomAppProfile("nickname"))
+                        .mobileNo(LattePreference.getCustomAppProfile("username"))
+                        .userId(LattePreference.getCustomAppProfile("id"))
+                        .enterUrl(LattePreference.getCustomAppProfile("avatar"))
+                        .build();
+
+/**
+ * 启动客户服聊天界面。
+ *
+ * @param context           应用上下文。
+ * @param customerServiceId 要与之聊天的客服 Id。
+ * @param title             聊天的标题，如果传入空值，则默认显示与之聊天的客服名称。
+ * @param customServiceInfo 当前使用客服者的用户信息。{@link io.rong.imlib.model.CSCustomServiceInfo}
+ */
+                RongIM.getInstance().startCustomerServiceChat(getActivity(),"KEFU152959386239127", "在线客服",csInfo);
             }
         });
 
@@ -199,7 +221,7 @@ public class IndexDelegate extends BottomItemDelegate implements
 
     }
     private void connectRongServer(String token1) {
-        RongIM.connect(token1, new RongIMClient.ConnectCallback() {
+        RongIM.connect(token2, new RongIMClient.ConnectCallback() {
             //token1参数报错
             @Override
             public void onTokenIncorrect() {
