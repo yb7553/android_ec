@@ -34,7 +34,7 @@ public class ShopCartDataConverter extends DataConverter {
             final int id = data.getInteger("id");
             final int count = data.getInteger("amount");
             final double price = data.getDouble("price");
-
+            final int goods_id = data.getInteger("goods_id");
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setField(MultipleFields.ITEM_TYPE, ShopCartItemType.SHOP_CART_ITEM)
                     .setField(MultipleFields.ID, id)
@@ -45,6 +45,7 @@ public class ShopCartDataConverter extends DataConverter {
                     .setField(ShopCartItemFields.PRICE, price)
                     .setField(ShopCartItemFields.IS_SELECTED, false)
                     .setField(ShopCartItemFields.POSITION, i)
+                    .setField(ShopCartItemFields.GOODS_ID, goods_id)
                     .build();
 
             dataList.add(entity);
