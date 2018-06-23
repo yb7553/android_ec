@@ -54,16 +54,18 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
     private String phone = "";
     private int cictyid;
     private AppCompatTextView tv_address_name, tv_address_phone, tv_shop_order_address,
-            tv_shop_order_send_staff, tv_sendmode;
+            tv_shop_order_send_staff, tv_sendmode, tv_shop_cart_total_price;
     private String cart_good_id;
+    private String totalAmount;
 
     @Override
     public Object setLayout() {
         return R.layout.delegate_shop_order;
     }
 
-    public ShopOrderDelegate create(String cart_good_id) {
+    public ShopOrderDelegate create(String cart_good_id, String amout) {
         this.cart_good_id = cart_good_id;
+        this.totalAmount=amout;
         return this;
     }
 
@@ -87,6 +89,9 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
         tv_shop_order_address = $(R.id.tv_shop_order_address);
         tv_shop_order_send_staff = $(R.id.tv_shop_order_send_staff);
         tv_sendmode = $(R.id.tv_sendmode);
+        tv_shop_cart_total_price = $(R.id.tv_shop_cart_total_price);
+        //同步金额
+        tv_shop_cart_total_price.setText(totalAmount);
     }
 
     @Override
@@ -179,7 +184,8 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
                         int code = JSON.parseObject(response).getInteger("code");
                         String msg = JSON.parseObject(response).getString("msg");
                         if (0 == code) {
-                            int orderId = JSON.parseObject(response).getInteger("orderId");
+                            int orderId = JSON.parseObject(response).getJSONObject("data").getInteger("orderId");
+                            postSendMsg(orderId);
                             FastPay.create(ShopOrderDelegate.this)
                                     //.setPayResultListener(ShopOrderDelegate.this)
                                     .setOrderId(orderId)
@@ -302,8 +308,42 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
         }
     }
 
+    /*上传地址*/
+    private void postSendMsg(int orderId) {
+        //final String orderUrl = "https://dsn.apizza.net/mock/4fcf60b56ecb0411bd10c19d7ac3a009/v2/ecapi.cart.checkout";
+        final String orderUrl = API.Config.getDomain() + API.SEND_TYPE_UPDATE;
+        final WeakHashMap<String, Object> orderParams = new WeakHashMap<>();
+        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        //orderParams.put("userId", mUserId);
+        orderParams.put("shopid", orderId);
+        orderParams.put("sendstaff", sendstaff);
+        orderParams.put("startstime", System.currentTimeMillis());
+        orderParams.put("endtime", endtime == 0 ? System.currentTimeMillis() : endtime);
+        final String jsonString = JSON.toJSONString(orderParams);
+        LogUtils.e("jsonString", jsonString);
+        //加入你的参数
+        RestClient.builder()
+                .url(orderUrl)
+                //.loader(getContext())
+                .raw(jsonString)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //进行具体的支付
+                        LatteLogger.d("ORDER", response);
+                        LogUtils.e("sendMode", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
 
-    private void postSendMsg() {
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();
+
     }
 
     /*选择地址，配送方式的回调*/
