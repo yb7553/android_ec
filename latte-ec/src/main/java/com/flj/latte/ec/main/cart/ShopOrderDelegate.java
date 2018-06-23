@@ -62,12 +62,32 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
     public static final String HTML_TYPE = "HTML_TYPE";
     private Bundle mArgs = null;
 
+    private int AddressCallBackCode = 300;//地址选择器回调码
+    private int TimeCallBackCode = 301;//时间选择器回调码
+
+    private int addressId = 0;
+    private String addressName = "";
+    private String addressLocation = "";
+    private String phone = "";
+    private int cictyid;
+    private AppCompatTextView tv_address_name, tv_address_phone, tv_shop_order_address,
+            tv_shop_order_send_staff, tv_sendmode, tv_shop_cart_total_price;
+    private String cart_good_id;
+    private String totalAmount;
 
 
     @Override
     public Object setLayout() {
         return R.layout.delegate_shop_order;
     }
+
+
+    public ShopOrderDelegate create(String cart_good_id, String amout) {
+        this.cart_good_id = cart_good_id;
+        this.totalAmount=amout;
+        return this;
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +102,19 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
         $(R.id.tv_shop_order_send).setOnClickListener(this);
         $(R.id.tv_shop_order_pay).setOnClickListener(this);
 
-        mTvShopOrderAddressName = $(R.id.tv_shop_order_address_name);
+        $(R.id.llc_recevice_personal).setOnClickListener(this);
+        // RelativeLayout rl_title = $(R.id.rl_title);
+        //设置标题栏的颜色
+        // rl_title.setBackgroundColor(Color.parseColor("#ff9999"));
+        tv_address_name = $(R.id.tv_shop_order_address_name);
+        tv_address_phone = $(R.id.tv_shop_order_address_phone);
+        tv_shop_order_address = $(R.id.tv_shop_order_address);
+        tv_shop_order_send_staff = $(R.id.tv_shop_order_send_staff);
+        tv_sendmode = $(R.id.tv_sendmode);
+        tv_shop_cart_total_price = $(R.id.tv_shop_cart_total_price);
+        //同步金额
+        tv_shop_cart_total_price.setText(totalAmount);
+
     }
 
     @Override
@@ -135,11 +167,21 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
                     public void onSuccess(String response) {
                         //进行具体的支付
                         LatteLogger.d("ORDER", response);
-                        final int orderId = JSON.parseObject(response).getInteger("result");
-                        FastPay.create(ShopOrderDelegate.this)
-                                //.setPayResultListener(ShopOrderDelegate.this)
-                                .setOrderId(orderId)
-                                .beginPayDialog();
+
+                        LogUtils.e("ORDER", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+                            int orderId = JSON.parseObject(response).getJSONObject("data").getInteger("orderId");
+                            postSendMsg(orderId);
+                            FastPay.create(ShopOrderDelegate.this)
+                                    //.setPayResultListener(ShopOrderDelegate.this)
+                                    .setOrderId(orderId)
+                                    .beginPayDialog();
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+
                     }
                 })
                 .build()
@@ -249,6 +291,71 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
             //payOrSign();
             onClickSendType();
 
+    /*上传地址*/
+    private void postSendMsg(int orderId) {
+        //final String orderUrl = "https://dsn.apizza.net/mock/4fcf60b56ecb0411bd10c19d7ac3a009/v2/ecapi.cart.checkout";
+        final String orderUrl = API.Config.getDomain() + API.SEND_TYPE_UPDATE;
+        final WeakHashMap<String, Object> orderParams = new WeakHashMap<>();
+        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        //orderParams.put("userId", mUserId);
+        orderParams.put("shopid", orderId);
+        orderParams.put("sendstaff", sendstaff);
+        orderParams.put("startstime", System.currentTimeMillis());
+        orderParams.put("endtime", endtime == 0 ? System.currentTimeMillis() : endtime);
+        final String jsonString = JSON.toJSONString(orderParams);
+        LogUtils.e("jsonString", jsonString);
+        //加入你的参数
+        RestClient.builder()
+                .url(orderUrl)
+                //.loader(getContext())
+                .raw(jsonString)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //进行具体的支付
+                        LatteLogger.d("ORDER", response);
+                        LogUtils.e("sendMode", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();
+
+
+    }
+
+    /*选择地址，配送方式的回调*/
+    @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (Activity.RESULT_OK == resultCode && requestCode == AddressCallBackCode) {
+            addressId = data.getInt("id");
+            addressName = data.getString("name");
+            phone = data.getString("phone");
+            addressLocation = data.getString("address");
+            //并且更新界面
+            updateAddress();
+        } else if (Activity.RESULT_OK == resultCode && requestCode == TimeCallBackCode) {
+            sendstaff = data.getString("sendstaff");
+            sendname = data.getString("sendname");
+            selecttime = data.getString("selecttime");
+            endtime = data.getLong("endtime");
+            updateSendMode();
+        }
+    }
+
+    //更新地址信息ui
+    private void updateAddress() {
+        tv_address_name.setText(addressName);
+        tv_address_phone.setText(Utils.getStringForX(phone, 3, 4));
+        tv_shop_order_address.setText(addressLocation);
+    }
 
 
 

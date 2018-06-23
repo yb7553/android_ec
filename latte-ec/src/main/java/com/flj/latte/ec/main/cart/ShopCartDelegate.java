@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.LogUtils;
 import com.flj.latte.delegates.bottom.BottomItemDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
+import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.ec.pay.IAlPayResultListener;
 import com.flj.latte.net.RestClient;
@@ -69,6 +71,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         }
     }
 
+    /*删除数据*/
     void onClickRemoveSelectedItem() {
         final List<MultipleItemEntity> data = mAdapter.getData();
         //要删除的数据
@@ -88,6 +91,8 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
                 removePosition = entityPosition;
             }
             if (removePosition <= mAdapter.getItemCount()) {
+                //此处进行移除服务器的数据
+                deleteGoods(mAdapter.getItem(removePosition).getField(ShopCartItemFields.GOODS_ID));
                 mAdapter.remove(removePosition);
                 mCurrentCount = mAdapter.getItemCount();
                 //更新数据
@@ -221,10 +226,72 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         checkItemCount();
     }
 
+    /*删除购物车商品*/
+    private void deleteGoods(int goodsId) {
+        final String shopcartUrl = API.Config.getDomain() + API.CART_DELETE;
+        // final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        LatteLogger.d("shopcart", shopcartUrl);
+        final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+        shopcart.put("goods_id", goodsId);
+        final String jsonString = JSON.toJSONString(shopcart);
+        LogUtils.e("jsonString", jsonString);
+        RestClient.builder()
+                .url(shopcartUrl)
+                .loader(getContext())
+                .raw(jsonString)
+                // .loader(getContext())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        LogUtils.e("response", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+                            // ToastUtil.showToast(getContext(), msg);
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();
+
+    }
+
     @Override
     public void onItemClick(double itemTotalPrice) {
         final double price = mAdapter.getTotalPrice();
         mTvTotalPrice.setText(String.valueOf(price));
+
+        /*//增加删减
+        final String shopcartUrl = API.Config.getDomain() + API.CART_UPDATE;
+        // final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        LatteLogger.d("shopcart", shopcartUrl);
+        final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+        //shopcart.put("good", goodsId);
+       // shopcart.put("amount", goodsId);
+        final String jsonString = JSON.toJSONString(shopcart);
+        LogUtils.e("jsonString", jsonString);
+        RestClient.builder()
+                .url(shopcartUrl)
+                .loader(getContext())
+                .raw(jsonString)
+                // .loader(getContext())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        LogUtils.e("response", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+                            // ToastUtil.showToast(getContext(), msg);
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();*/
     }
 
     @Override
@@ -252,8 +319,16 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
 
     }
 
-    private void  onClickShopOrder(){
-        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate());
+
+    private void onClickShopOrder() {
+        ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
+        String cart_good_id = "[";
+        for (MultipleItemEntity entity : data) {
+            cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";
+        }
+        cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
+        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
+
     }
 
     @Override
