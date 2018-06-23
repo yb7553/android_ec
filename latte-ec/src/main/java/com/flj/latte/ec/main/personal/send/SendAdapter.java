@@ -32,7 +32,7 @@ public class SendAdapter extends MultipleRecyclerAdapter {
             case SendItemType.ITEM_SENDSTAFF:
                 final String name = entity.getField(MultipleFields.NAME);
                 final String phone = entity.getField(SendItemFields.PHONE);
-              //  final String address = entity.getField(SendItemFields.ADDRESS);
+                final String address = entity.getField(SendItemFields.ADDRESS);
                 final boolean isDefault = entity.getField(MultipleFields.TAG);
                 final int id = entity.getField(MultipleFields.ID);
 

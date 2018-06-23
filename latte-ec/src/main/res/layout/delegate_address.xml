@@ -14,7 +14,6 @@
             android:layout_height="match_parent">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_address_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
@@ -47,7 +46,9 @@
         android:id="@+id/btn_address_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:gravity="center"
+
         android:padding="12dp"
         android:text="新增地址"/>
 
