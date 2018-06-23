@@ -57,7 +57,8 @@ public class API {
     public static final String CONFIGNEE_UPDATE="/v2/ecapi.consignee.update";
     //删除
     public static final String CONFIGNEE_DELETE="/v2/ecapi.consignee.delete";
-
+    //配送人员列表
+    public static final String CONFIGNEE_SEND_LIST="/v2/ecapi.send.staff.list";
     /**
      *  个人信息
      */

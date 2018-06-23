@@ -125,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|left"
-                android:text="￥0.01"
+                android:text="￥0.00"
                 android:textColor="@color/app_main"
                 android:textSize="20sp"
                 tools:ignore="HardcodedText,RtlHardcoded" />
