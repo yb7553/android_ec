@@ -6,5 +6,5 @@ package com.flj.latte.ec.main.personal.send;
 
 public enum SendItemFields {
     PHONE,
-    ADDRESS
+    CITYID
 }
