@@ -23,18 +23,18 @@ public class SendDataConverter extends DataConverter {
         for (int i = 0; i < size; i++) {
 
             final JSONObject data = array.getJSONObject(i);
-            final String id = data.getString("id");
+            final int id = data.getInteger("id");
             final String name = data.getString("name");
-            final String phone = data.getString("mobile");
-            final String city = data.getString("city");
-            final boolean isDefault = data.getBoolean("is_default");
+            final String phone = data.getString("phone");
+            final String address = data.getString("address");
+            final boolean isDefault = data.getBoolean("default");
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(SendItemType.ITEM_SENDSTAFF)
                     .setField(MultipleFields.ID, id)
                     .setField(MultipleFields.NAME, name)
                     .setField(MultipleFields.TAG, isDefault)
-                    .setField(SendItemFields.CITYID, city)
+                    .setField(SendItemFields.ADDRESS, address)
                     .setField(SendItemFields.PHONE, phone)
                     .build();
             ENTITIES.add(entity);

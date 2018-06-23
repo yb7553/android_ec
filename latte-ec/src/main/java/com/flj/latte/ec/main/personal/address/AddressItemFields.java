@@ -11,6 +11,5 @@ public enum AddressItemFields {
     PROVINCEID,
     CITYID,
     DISTRICTID,
-    RECEIVERZIP,
-    RECEIVERCITYID
+    RECEIVERZIP
 }

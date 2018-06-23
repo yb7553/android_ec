@@ -21,7 +21,6 @@ import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.ec.pay.IAlPayResultListener;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
-import com.flj.latte.ui.recycler.MultipleFields;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -47,6 +46,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     private IconTextView mIconSelectAll = null;
     private ViewStubCompat mStubNoItem = null;
     private AppCompatTextView mTvTotalPrice = null;
+
 
 
     void onClickSelectAll() {
@@ -106,7 +106,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     //创建订单，注意，和支付是没有关系的
     private void createOrder() {
         //final String orderUrl = "https://dsn.apizza.net/mock/4fcf60b56ecb0411bd10c19d7ac3a009/v2/ecapi.cart.checkout";
-        final String orderUrl = API.Config.getDomain() + API.CART_CHECKOUT;
+        final String orderUrl =API.Config.getDomain() + API.CART_CHECKOUT;
         //final WeakHashMap<String, Object> orderParams = new WeakHashMap<>();
         //加入你的参数
         RestClient.builder()
@@ -118,14 +118,14 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
                     public void onSuccess(String response) {
                         //进行具体的支付
                         LatteLogger.d("ORDER", response);
-                        // final int orderId = JSON.parseObject(response).getInteger("result");
+                       // final int orderId = JSON.parseObject(response).getInteger("result");
                         final String data = JSON.parseObject(response).getString("data");
                         LatteLogger.d("DATA", data);
                         final int orderId = JSON.parseObject(data).getInteger("orderId");
                         final int userId = JSON.parseObject(data).getInteger("userId");
                         LatteLogger.d("orderId", orderId);
                         LatteLogger.d("userId", userId);
-                        //
+
 //                        FastPay.create(ShopCartDelegate.this)
 //                                .setPayResultListener(ShopCartDelegate.this)
 //                                .setOrderId(orderId)
@@ -136,6 +136,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
                 .post();
 
     }
+
 
 
     @SuppressWarnings("RestrictedApi")
@@ -187,16 +188,16 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         final String shopcartUrl = API.Config.getDomain() + API.CART_GET;
-        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        final Long mUserId=LattePreference.getCustomAppProfileLong("userId");
         LatteLogger.d("shopcart", shopcartUrl);
         final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
-        shopcart.put("userId", mUserId);
+        shopcart.put("userId",mUserId);
         final String jsonString = JSON.toJSONString(shopcart);
 
         RestClient.builder()
                 .url(shopcartUrl)
                 .raw(jsonString)
-                // .loader(getContext())
+               // .loader(getContext())
                 .success(this)
                 .build()
                 .post();
@@ -251,14 +252,8 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
 
     }
 
-    private void onClickShopOrder() {
-        ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
-        String cart_good_id = "[";
-        for (MultipleItemEntity entity : data) {
-            cart_good_id += entity.getField(MultipleFields.ID) + ",";
-        }
-        cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
-        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id));
+    private void  onClickShopOrder(){
+        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate());
     }
 
     @Override
@@ -271,8 +266,9 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         } else if (i == R.id.tv_top_shop_cart_clear) {
             onClickClear();
         } else if (i == R.id.tv_shop_cart_pay) {
-            //  createOrder();
+            createOrder();
             onClickShopOrder();
+
         }
     }
 }

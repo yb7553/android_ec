@@ -20,7 +20,6 @@ public class AddressDataConverter extends DataConverter {
     public ArrayList<MultipleItemEntity> convert() {
         LogUtils.e("s", getJsonData());
         final JSONArray array = JSON.parseObject(getJsonData()).getJSONArray("data");
-        if (array==null)return null;
         final int size = array.size();
         for (int i = 0; i < size; i++) {
 
@@ -40,7 +39,6 @@ public class AddressDataConverter extends DataConverter {
             final int cityId = data.getInteger("receiverCityId");
             final int districtId = data.getInteger("receiverDistrictId");
             final String receiverZip = data.getString("receiverZip");
-            final int receiverCityId= data.getInteger("receiverCityId");
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(AddressItemType.ITEM_ADDRESS)
                     .setField(MultipleFields.ID, id)
@@ -53,7 +51,6 @@ public class AddressDataConverter extends DataConverter {
                     .setField(AddressItemFields.CITYID, cityId)
                     .setField(AddressItemFields.DISTRICTID, districtId)
                     .setField(AddressItemFields.RECEIVERZIP, receiverZip)
-                    .setField(AddressItemFields.RECEIVERCITYID, receiverCityId)
                     .build();
             ENTITIES.add(entity);
         }
