@@ -138,9 +138,9 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         shoppingselectview.setOnSelectedListener(this);
         shoppingselectview.setData(attslist);
         //TODO:测试金额累加，id 96
-        attslist.get(0).getList().get(0).setAttr_price("10.02");
-        attslist.get(1).getList().get(2).setAttr_price("10.02");
-        attslist.get(1).getList().get(3).setAttr_price("1.02");
+        //attslist.get(0).getList().get(0).setAttr_price("10.02");
+        //attslist.get(1).getList().get(2).setAttr_price("10.02");
+       // attslist.get(1).getList().get(3).setAttr_price("1.02");
         //累计默认选中第一项金额
         totalAmout = baseAmout;
         for (BigClassification bigClassification :
@@ -229,7 +229,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         addcart.put("goods_price", totalAmout);
         addcart.put("goods_number", mSkuCountBtn.getNumber());
         if (null == attslist) {
-            ToastUtil.showToast(getProxyActivity(), "数据有误，请稍后再试");
+            ToastUtil.showToast(window.getContext(), "数据有误，请稍后再试");
             return;
         }
         addcart.put("goods_attr_id", attslist.get(0).getList().get(0).getId());
@@ -262,7 +262,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-                        ToastUtil.showToast(getProxyActivity(), "购物车添加失败" );
+                        ToastUtil.showToast(window.getContext(), "购物车添加失败" );
                     }
                 })
                 .build()
