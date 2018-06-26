@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.flj.latte.ec.R;
 import com.flj.latte.delegates.LatteDelegate;
+import com.flj.latte.ec.R;
 import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
@@ -62,6 +61,8 @@ public class SignInDelegate extends LatteDelegate implements View.OnClickListene
                                 SignHandler.onSignIn(response, mISignListener);
 
                                 getSupportDelegate().startWithPop(new EcBottomDelegate());
+                                //解决登录完输入法不关闭问题
+                                getSupportDelegate().hideSoftInput();
                             }else{
 
                                 mMobile.setError("用户或密码错误");

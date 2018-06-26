@@ -23,6 +23,7 @@ import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.ec.pay.IAlPayResultListener;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
+import com.flj.latte.ui.recycler.MultipleFields;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -91,9 +92,11 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
             }
             if (removePosition <= mAdapter.getItemCount()) {
                 //此处进行移除服务器的数据
-                deleteGoods(mAdapter.getItem(removePosition).getField(ShopCartItemFields.GOODS_ID));
+                deleteGoods(mAdapter.getItem(removePosition).getField(MultipleFields.ID));
                 mAdapter.remove(removePosition);
                 mCurrentCount = mAdapter.getItemCount();
+                //删除成功重新设置界面价格
+                mAdapter.calTotalPrice(mAdapter.getData());
                 //更新数据
                 mAdapter.notifyItemRangeChanged(removePosition, mAdapter.getItemCount());
             }
@@ -245,7 +248,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
                         int code = JSON.parseObject(response).getInteger("code");
                         String msg = JSON.parseObject(response).getString("msg");
                         if (0 == code) {
-                            // ToastUtil.showToast(getContext(), msg);
+                            ToastUtil.showToast(getContext(), msg);
                         } else {
                             ToastUtil.showToast(getContext(), msg);
                         }
@@ -260,14 +263,13 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     public void onItemClick(double itemTotalPrice) {
         final double price = mAdapter.getTotalPrice();
         mTvTotalPrice.setText(String.valueOf(price));
-
         /*//增加删减
         final String shopcartUrl = API.Config.getDomain() + API.CART_UPDATE;
         // final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
         LatteLogger.d("shopcart", shopcartUrl);
         final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
-        //shopcart.put("good", goodsId);
-       // shopcart.put("amount", goodsId);
+        shopcart.put("good", id);
+        shopcart.put("amount", goodsId);
         final String jsonString = JSON.toJSONString(shopcart);
         LogUtils.e("jsonString", jsonString);
         RestClient.builder()
@@ -319,6 +321,10 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
 
     private void onClickShopOrder() {
         ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
+        if (null == data) {
+            ToastUtil.showToast(getContext(), "无物品信息不能结算");
+            return;
+        }
         String cart_good_id = "[";
         for (MultipleItemEntity entity : data) {
             cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";

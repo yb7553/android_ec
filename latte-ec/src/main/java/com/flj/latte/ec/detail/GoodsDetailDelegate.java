@@ -110,10 +110,9 @@ public class GoodsDetailDelegate extends LatteDelegate implements
     }
 
     private void onClickShopCart() {
-
         if (LattePreference.getCustomAppProfile("token") != null) {
+            //跳转到购物车，和首页购物车类要一致。否则无法进行订单操作。
             getSupportDelegate().start(new ShopCartDetailDelegate());
-
         }
     }
 
@@ -153,7 +152,12 @@ public class GoodsDetailDelegate extends LatteDelegate implements
         $(R.id.rl_add_shop_cart).setOnClickListener(view -> onClickAddShopCart());
 
         $(R.id.rl_shop_cart).setOnClickListener(view -> onClickShopCart());
-
+        $(R.id.icon_goods_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportDelegate().pop();
+            }
+        });
         mCollapsingToolbarLayout.setContentScrimColor(Color.WHITE);
         mAppBar.addOnOffsetChangedListener(this);
         mCircleTextView.setCircleBackground(Color.RED);
