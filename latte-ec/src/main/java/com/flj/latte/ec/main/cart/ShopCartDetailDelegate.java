@@ -14,13 +14,17 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.LogUtils;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.delegates.bottom.BottomItemDelegate;
 import com.flj.latte.ec.R;
+import com.flj.latte.ec.common.http.api.API;
+import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.ec.main.EcBottomDelegate;
 import com.flj.latte.ec.pay.IAlPayResultListener;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
+import com.flj.latte.ui.recycler.MultipleFields;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
@@ -48,7 +52,6 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
     private AppCompatTextView mTvTotalPrice = null;
 
 
-
     void onClickSelectAll() {
         final int tag = (int) mIconSelectAll.getTag();
         if (tag == 0) {
@@ -69,6 +72,7 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
         }
     }
 
+    /*删除数据*/
     void onClickRemoveSelectedItem() {
         final List<MultipleItemEntity> data = mAdapter.getData();
         //要删除的数据
@@ -88,8 +92,12 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
                 removePosition = entityPosition;
             }
             if (removePosition <= mAdapter.getItemCount()) {
+                //此处进行移除服务器的数据
+                deleteGoods(mAdapter.getItem(removePosition).getField(MultipleFields.ID));
                 mAdapter.remove(removePosition);
                 mCurrentCount = mAdapter.getItemCount();
+                //删除成功重新设置界面价格
+                mAdapter.calTotalPrice(mAdapter.getData());
                 //更新数据
                 mAdapter.notifyItemRangeChanged(removePosition, mAdapter.getItemCount());
             }
@@ -105,7 +113,8 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
 
     //创建订单，注意，和支付是没有关系的
     private void createOrder() {
-        final String orderUrl = "https://dsn.apizza.net/mock/4fcf60b56ecb0411bd10c19d7ac3a009/v2/ecapi.cart.checkout";
+        //final String orderUrl = "https://dsn.apizza.net/mock/4fcf60b56ecb0411bd10c19d7ac3a009/v2/ecapi.cart.checkout";
+        final String orderUrl = API.Config.getDomain() + API.CART_CHECKOUT;
         //final WeakHashMap<String, Object> orderParams = new WeakHashMap<>();
         //加入你的参数
         RestClient.builder()
@@ -117,14 +126,14 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
                     public void onSuccess(String response) {
                         //进行具体的支付
                         LatteLogger.d("ORDER", response);
-                       // final int orderId = JSON.parseObject(response).getInteger("result");
+                        // final int orderId = JSON.parseObject(response).getInteger("result");
                         final String data = JSON.parseObject(response).getString("data");
                         LatteLogger.d("DATA", data);
                         final int orderId = JSON.parseObject(data).getInteger("orderId");
                         final int userId = JSON.parseObject(data).getInteger("userId");
                         LatteLogger.d("orderId", orderId);
                         LatteLogger.d("userId", userId);
-
+                        //
 //                        FastPay.create(ShopCartDelegate.this)
 //                                .setPayResultListener(ShopCartDelegate.this)
 //                                .setOrderId(orderId)
@@ -135,7 +144,6 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
                 .post();
 
     }
-
 
 
     @SuppressWarnings("RestrictedApi")
@@ -186,18 +194,17 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        final String shopcartUrl = "http://120.79.230.229/bfwl-mall/calmdown/v2/ecapi.cart.get";
-        final Long mUserId=LattePreference.getCustomAppProfileLong("userId");
+        final String shopcartUrl = API.Config.getDomain() + API.CART_GET;
+        final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
         LatteLogger.d("shopcart", shopcartUrl);
         final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
-
-        shopcart.put("userId",mUserId);
+        shopcart.put("userId", mUserId);
         final String jsonString = JSON.toJSONString(shopcart);
 
         RestClient.builder()
                 .url(shopcartUrl)
                 .raw(jsonString)
-               // .loader(getContext())
+                // .loader(getContext())
                 .success(this)
                 .build()
                 .post();
@@ -221,10 +228,71 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
         checkItemCount();
     }
 
+    /*删除购物车商品*/
+    private void deleteGoods(int goodsId) {
+        final String shopcartUrl = API.Config.getDomain() + API.CART_DELETE;
+        // final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        LatteLogger.d("shopcart", shopcartUrl);
+        final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+        shopcart.put("goods_id", goodsId);
+        final String jsonString = JSON.toJSONString(shopcart);
+        LogUtils.e("jsonString", jsonString);
+        RestClient.builder()
+                .url(shopcartUrl)
+                .loader(getContext())
+                .raw(jsonString)
+                // .loader(getContext())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        LogUtils.e("response", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+                            // ToastUtil.showToast(getContext(), msg);
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();
+
+    }
+
     @Override
     public void onItemClick(double itemTotalPrice) {
         final double price = mAdapter.getTotalPrice();
         mTvTotalPrice.setText(String.valueOf(price));
+        /*//增加删减
+        final String shopcartUrl = API.Config.getDomain() + API.CART_UPDATE;
+        // final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
+        LatteLogger.d("shopcart", shopcartUrl);
+        final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+        shopcart.put("good", id);
+        shopcart.put("amount", goodsId);
+        final String jsonString = JSON.toJSONString(shopcart);
+        LogUtils.e("jsonString", jsonString);
+        RestClient.builder()
+                .url(shopcartUrl)
+                .loader(getContext())
+                .raw(jsonString)
+                // .loader(getContext())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        LogUtils.e("response", response);
+                        int code = JSON.parseObject(response).getInteger("code");
+                        String msg = JSON.parseObject(response).getString("msg");
+                        if (0 == code) {
+                            // ToastUtil.showToast(getContext(), msg);
+                        } else {
+                            ToastUtil.showToast(getContext(), msg);
+                        }
+                    }
+                })
+                .build()
+                .post();*/
     }
 
     @Override
@@ -252,8 +320,18 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
 
     }
 
-    private void  onClickShopOrder(){
-        getSupportDelegate().start(new ShopOrderDelegate());
+    private void onClickShopOrder() {
+        ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
+        if (null == data) {
+            ToastUtil.showToast(getContext(), "无物品信息不能结算");
+            return;
+        }
+        String cart_good_id = "[";
+        for (MultipleItemEntity entity : data) {
+            cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";
+        }
+        cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
+        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
     }
 
     @Override
@@ -261,18 +339,13 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
         int i = view.getId();
         if (i == R.id.icon_shop_cart_select_all) {
             onClickSelectAll();
-
         } else if (i == R.id.tv_top_shop_cart_remove_selected) {
             onClickRemoveSelectedItem();
-
         } else if (i == R.id.tv_top_shop_cart_clear) {
             onClickClear();
-
         } else if (i == R.id.tv_shop_cart_pay) {
-
-            createOrder();
+            //  createOrder();
             onClickShopOrder();
-
         }
     }
 }

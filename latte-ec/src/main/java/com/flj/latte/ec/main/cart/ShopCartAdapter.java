@@ -6,11 +6,15 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.flj.latte.app.Latte;
 import com.flj.latte.ec.R;
+import com.flj.latte.ec.common.http.api.API;
+import com.flj.latte.ec.utils.Utils;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.recycler.MultipleFields;
@@ -20,6 +24,7 @@ import com.flj.latte.ui.recycler.MultipleViewHolder;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.List;
+import java.util.WeakHashMap;
 
 /**
  * Created by yb
@@ -44,8 +49,9 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
         for (MultipleItemEntity entity : data) {
             final double price = entity.getField(ShopCartItemFields.PRICE);
             final int count = entity.getField(ShopCartItemFields.COUNT);
-            final double total = price * count;
-            mTotalPrice = mTotalPrice + total;
+            //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
+            final double total = Utils.mul(price, (double) count);
+            mTotalPrice = Utils.add(mTotalPrice, total);
         }
         //添加购物测item布局
         addItemType(ShopCartItemType.SHOP_CART_ITEM, R.layout.item_shop_cart);
@@ -60,6 +66,20 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
     }
 
     public double getTotalPrice() {
+        return mTotalPrice;
+    }
+
+    public double calTotalPrice(List<MultipleItemEntity> data) {
+        mTotalPrice=0.00;
+        //初始化总价
+        for (MultipleItemEntity entity : data) {
+            final double price = entity.getField(ShopCartItemFields.PRICE);
+            final int count = entity.getField(ShopCartItemFields.COUNT);
+            //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
+            final double total = Utils.mul(price, (double) count);
+            mTotalPrice = Utils.add(mTotalPrice, total);
+        }
+        mCartItemListener.onItemClick(mTotalPrice);
         return mTotalPrice;
     }
 
@@ -124,21 +144,28 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
                 iconMinus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final int currentCount = entity.getField(ShopCartItemFields.COUNT);
+                        int currentCount = entity.getField(ShopCartItemFields.COUNT);
                         if (Integer.parseInt(tvCount.getText().toString()) > 1) {
+                            final String shopcartUrl = API.Config.getDomain() + API.CART_UPDATE;
+                            final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+                            shopcart.put("good", id);
+                            currentCount--;
+                            shopcart.put("amount", currentCount);
+                            final String jsonString = JSON.toJSONString(shopcart);
                             RestClient.builder()
-                                    .url("shop_cart_count.php")
+                                    .url(shopcartUrl)
                                     .loader(mContext)
-                                    .params("count", currentCount)
+                                    .raw(jsonString)
                                     .success(new ISuccess() {
                                         @Override
                                         public void onSuccess(String response) {
+                                            LogUtils.e("response", response);
                                             int countNum = Integer.parseInt(tvCount.getText().toString());
                                             countNum--;
                                             tvCount.setText(String.valueOf(countNum));
                                             if (mCartItemListener != null) {
-                                                mTotalPrice = mTotalPrice - price;
-                                                final double itemTotal = countNum * price;
+                                                mTotalPrice = Utils.subtract(mTotalPrice, price);
+                                                final double itemTotal = Utils.mul(countNum, price);
                                                 mCartItemListener.onItemClick(itemTotal);
                                             }
                                         }
@@ -152,20 +179,27 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
                 iconPlus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final int currentCount = entity.getField(ShopCartItemFields.COUNT);
+                        int currentCount = entity.getField(ShopCartItemFields.COUNT);
+                        final String shopcartUrl = API.Config.getDomain() + API.CART_UPDATE;
+                        final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
+                        shopcart.put("good", id);
+                        currentCount++;
+                        shopcart.put("amount", currentCount);
+                        final String jsonString = JSON.toJSONString(shopcart);
                         RestClient.builder()
-                                .url("shop_cart_count.php")
+                                .url(shopcartUrl)
                                 .loader(mContext)
-                                .params("count", currentCount)
+                                .raw(jsonString)
                                 .success(new ISuccess() {
                                     @Override
                                     public void onSuccess(String response) {
+                                        LogUtils.e("response", response);
                                         int countNum = Integer.parseInt(tvCount.getText().toString());
                                         countNum++;
                                         tvCount.setText(String.valueOf(countNum));
                                         if (mCartItemListener != null) {
-                                            mTotalPrice = mTotalPrice + price;
-                                            final double itemTotal = countNum * price;
+                                            mTotalPrice = Utils.add(mTotalPrice, price);
+                                            final double itemTotal = Utils.mul(countNum, price);
                                             mCartItemListener.onItemClick(itemTotal);
                                         }
                                     }
