@@ -27,4 +27,5 @@
     <!--确认订单边距-->
     <dimen name="order_margin">10dp</dimen>
     <dimen name="order_size">15dp</dimen>
+    <dimen name="btn_paddsize">5dp</dimen>
 </resources>

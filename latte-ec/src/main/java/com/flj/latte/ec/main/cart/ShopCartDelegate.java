@@ -321,7 +321,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
 
     private void onClickShopOrder() {
         ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
-        if (null == data) {
+        if (null == data || data.size()==0) {
             ToastUtil.showToast(getContext(), "无物品信息不能结算");
             return;
         }
