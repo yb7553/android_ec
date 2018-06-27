@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardElevation="3dp"
-    card_view:cardUseCompatPadding="true">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:layout_gravity="center"
+                                    card_view:cardBackgroundColor="@android:color/white"
+                                    card_view:cardCornerRadius="6dp"
+                                    card_view:cardElevation="3dp"
+                                    card_view:cardUseCompatPadding="true">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:text="姓名"
-                android:textColor="@color/app_main" />
+                android:textColor="@color/app_main"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_address_phone"
@@ -36,17 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="电话"
-                android:textColor="@color/we_chat_black" />
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_address_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:text="删除" />
+                android:textColor="@color/we_chat_black"/>
 
         </RelativeLayout>
-
 
 
         <RelativeLayout
@@ -63,21 +55,40 @@
                 android:layout_marginLeft="20dp"
                 android:gravity="center_vertical|left"
                 android:textColor="@color/we_chat_black"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="20dp">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_address_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bg_btn_selector"
+                android:padding="@dimen/btn_paddsize"
+                android:text="  删除  "
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_address_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:text="修改"
-                android:textSize="30sp" />
-
-        </RelativeLayout>
-
-
-
+                android:background="@drawable/bg_btn_selector"
+                android:padding="@dimen/btn_paddsize"
+                android:text="  修改  "
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </LinearLayout>
     </android.support.v7.widget.LinearLayoutCompat>
 
 </android.support.v7.widget.CardView>

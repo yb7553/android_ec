@@ -19,7 +19,13 @@ public class ShopCartDataConverter extends DataConverter {
     public ArrayList<MultipleItemEntity> convert() {
 
         final ArrayList<MultipleItemEntity> dataList = new ArrayList<>();
-        final JSONArray dataArray = JSON.parseObject(getJsonData()).getJSONArray("data");
+        JSONArray dataArray = null;
+        //服务器异常连不上防止报空崩溃处理
+        try {
+            dataArray = JSON.parseObject(getJsonData()).getJSONArray("data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //防止用户初次注册，点击购物车崩溃的bug
         if (null == dataArray) return null;
         final int size = dataArray.size();
