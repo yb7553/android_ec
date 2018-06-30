@@ -27,8 +27,10 @@ import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
+import com.flj.latte.ec.common.http.api.API;
 import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.ec.main.cart.ShopCartDelegate;
+import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.net.RestClient;
 import com.flj.latte.net.callback.IFailure;
 import com.flj.latte.net.callback.ISuccess;
@@ -79,7 +81,9 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     public static GoodsSkuDelegate create(LatteDelegate delegate) {
         return new GoodsSkuDelegate(delegate);
     }
-     Window window;
+
+    Window window;
+
     public void beginSkuDialog() {
         mDialog.show();
         window = mDialog.getWindow();
@@ -140,15 +144,15 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         //TODO:测试金额累加，id 96
         //attslist.get(0).getList().get(0).setAttr_price("10.02");
         //attslist.get(1).getList().get(2).setAttr_price("10.02");
-       // attslist.get(1).getList().get(3).setAttr_price("1.02");
+        // attslist.get(1).getList().get(3).setAttr_price("1.02");
         //累计默认选中第一项金额
         totalAmout = baseAmout;
         for (BigClassification bigClassification :
                 attslist) {
-                java.math.BigDecimal d1 = new java.math.BigDecimal(String.valueOf(totalAmout));
-                java.math.BigDecimal d2 = new java.math.BigDecimal(bigClassification.getList().get(0).getAttr_price());
-                totalAmout = d1.add(d2).doubleValue();
-                attsStr = attsStr + "*" + bigClassification.getList().get(0).getName();
+            java.math.BigDecimal d1 = new java.math.BigDecimal(String.valueOf(totalAmout));
+            java.math.BigDecimal d2 = new java.math.BigDecimal(bigClassification.getList().get(0).getAttr_price());
+            totalAmout = d1.add(d2).doubleValue();
+            attsStr = attsStr + "*" + bigClassification.getList().get(0).getName();
         }
 
     }
@@ -217,13 +221,13 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
     }
 
     private void postSkuCart() {
-        final String addcartUrl = "http://120.79.230.229/bfwl-mall/calmdown/v2/ecapi.cart.insert";
+        final String addcartUrl = API.Config.getDomain() + API.CART_INSERT;
         LatteLogger.d("addcart", addcartUrl);
         final WeakHashMap<String, Object> addcart = new WeakHashMap<>();
         final Long mUserId = LattePreference.getCustomAppProfileLong("userId");
         addcart.put("userId", mUserId);
         addcart.put("goods_id", mGoodsID);
-        addcart.put("goods_sn", mGoodsID);
+        addcart.put("goods_sn", this.mGoodsDetail.getString("sku"));
         addcart.put("goods_name", this.mGoodsDetail.getString("name"));
         addcart.put("market_price", this.mGoodsDetail.getDoubleValue("price"));
         addcart.put("goods_price", totalAmout);
@@ -241,7 +245,7 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
         }
         addcart.put("goods_attr", attsStr.startsWith("*") ? attsStr.substring(1) : attsStr);
         final String jsonString = JSON.toJSONString(addcart);
-        LogUtils.e(""+jsonString);
+        LogUtils.e("" + jsonString);
         RestClient.builder()
                 .url(addcartUrl)
                 .raw(jsonString)
@@ -254,15 +258,18 @@ public class GoodsSkuDelegate extends LatteDelegate implements OnSelectedListene
                         if (isAdded == 0 && !StringUtils.isEmpty(tip)) {
                             mDialog.cancel();
                             ToastUtil.showToast(window.getContext(), "添加成功");
-                        }else{
-                            ToastUtil.showToast(window.getContext(), "" + tip);
-                        }
+                        } else {
+                            if (response.contains("token")) {
+                                getSupportDelegate().start(new SignInDelegate());
+                            } else{
+                                ToastUtil.showToast(window.getContext(), "" + tip);
+                        }}
                     }
                 })
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-                        ToastUtil.showToast(window.getContext(), "购物车添加失败" );
+                        ToastUtil.showToast(window.getContext(), "购物车添加失败");
                     }
                 })
                 .build()

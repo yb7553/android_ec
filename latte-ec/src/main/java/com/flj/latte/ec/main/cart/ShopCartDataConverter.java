@@ -41,6 +41,10 @@ public class ShopCartDataConverter extends DataConverter {
             final int count = data.getInteger("amount");
             final double price = data.getDouble("price");
             final int goods_id = data.getInteger("goods_id");
+            final boolean is_on_sale = data.getJSONObject("product").getBoolean("is_on_sale");
+            final boolean is_Exist_Goods = data.getJSONObject("product").getBoolean("is_Exist_Goods");
+            final boolean is_Exist_Attr = data.getJSONObject("product").getBoolean("is_Exist_Attr");
+
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setField(MultipleFields.ITEM_TYPE, ShopCartItemType.SHOP_CART_ITEM)
                     .setField(MultipleFields.ID, id)
@@ -52,6 +56,10 @@ public class ShopCartDataConverter extends DataConverter {
                     .setField(ShopCartItemFields.IS_SELECTED, false)
                     .setField(ShopCartItemFields.POSITION, i)
                     .setField(ShopCartItemFields.GOODS_ID, goods_id)
+                    .setField(ShopCartItemFields.IS_ON_SALE, is_on_sale)
+                    .setField(ShopCartItemFields.IS_EXIST_GOODS, is_Exist_Goods)
+                    .setField(ShopCartItemFields.IS_EXIST_ATTR, is_Exist_Attr)
+
                     .build();
 
             dataList.add(entity);

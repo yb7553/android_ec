@@ -7,5 +7,8 @@ enum ShopCartItemFields {
     PRICE,
     IS_SELECTED,
     POSITION,
-    GOODS_ID
+    GOODS_ID,
+    IS_ON_SALE,
+    IS_EXIST_GOODS,
+    IS_EXIST_ATTR
 }

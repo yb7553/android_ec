@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -27,14 +27,64 @@
                     <com.bigkoo.convenientbanner.ConvenientBanner
                         android:id="@+id/detail_banner"
                         android:layout_width="match_parent"
-                        android:layout_height="360dp" />
+                        android:layout_height="360dp"/>
 
                     <android.support.v7.widget.ContentFrameLayout
                         android:id="@+id/frame_goods_info"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_below="@+id/detail_banner" />
+                        android:layout_below="@+id/detail_banner"/>
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:id="@+id/ll_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp"
+                        android:layout_below="@id/frame_goods_info"
+                        android:background="@color/white"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/tv_goods_comment_count"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:gravity="left|center"
+                            android:text="评论(20)"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"/>
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/tv__more_comment_tip"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:gravity="right|center"
+                            android:text="查看更多评论"
+                            android:textColor="@android:color/darker_gray"/>
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:id="@+id/tv_more_comment_arrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center"
+                            android:text="{fa-chevron-right}"
+                            android:textColor="@android:color/darker_gray"/>
+
+                    </android.support.v7.widget.LinearLayoutCompat>
+
+                    <android.support.v7.widget.ContentFrameLayout
+                        android:id="@+id/frame_goods_comment"
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/ll_comment"
+                        android:layout_height="wrap_content"/>
                 </RelativeLayout>
+
 
                 <!--要放在下面-->
                 <android.support.v7.widget.Toolbar
@@ -55,7 +105,7 @@
                             android:gravity="center"
                             android:text="{fa-chevron-left}"
                             android:textColor="@android:color/black"
-                            android:textSize="26sp" />
+                            android:textSize="26sp"/>
 
                         <android.support.v7.widget.AppCompatTextView
                             android:id="@+id/tv_detail_title_text"
@@ -64,28 +114,30 @@
                             android:layout_centerInParent="true"
                             android:text="商品详情"
                             android:textColor="@android:color/black"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"/>
                     </RelativeLayout>
                 </android.support.v7.widget.Toolbar>
                 <!--如果将TabLayout写在这里，将透明-->
 
+
             </android.support.design.widget.CollapsingToolbarLayout>
+
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"/>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <include layout="@layout/layout_goods_detail_bottom" />
+    <include layout="@layout/layout_goods_detail_bottom"/>
 
 </RelativeLayout>
