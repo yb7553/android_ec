@@ -81,6 +81,7 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
         $(R.id.tv_shop_order_send).setOnClickListener(this);
         $(R.id.tv_shop_order_pay).setOnClickListener(this);
         $(R.id.llc_recevice_personal).setOnClickListener(this);
+        $(R.id.ll_shop_order_personal).setOnClickListener(this);
         // RelativeLayout rl_title = $(R.id.rl_title);
         //设置标题栏的颜色
         // rl_title.setBackgroundColor(Color.parseColor("#ff9999"));
@@ -299,7 +300,8 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
             //onClickSendType();
             createOrder();
             //payOrSign();
-        } else if (i == R.id.tv_shop_order_send) {
+        } else if (i == R.id.tv_shop_order_send
+                || i==R.id.ll_shop_order_personal) {
             //onClickClear();
             //payOrSign();
             onClickSendType();
@@ -337,7 +339,7 @@ public class ShopOrderDelegate extends LatteDelegate implements View.OnClickList
                         if (0 == code) {
 
                         } else {
-                            ToastUtil.showToast(getContext(), msg);
+                           // ToastUtil.showToast(getContext(), msg);
                         }
                     }
                 })
