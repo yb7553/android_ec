@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -20,12 +21,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.daimajia.androidanimations.library.YoYo;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
-import com.flj.latte.ec.common.util.ToastUtil;
 import com.flj.latte.ec.main.cart.ShopCartDetailDelegate;
 import com.flj.latte.ec.sign.SignInDelegate;
 import com.flj.latte.net.RestClient;
@@ -68,7 +69,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
 
     private String mGoodsThumbUrl = null;
     private int mShopCount = 0;
-
+    private AppCompatTextView tv_goods_comment_count;
     private JSONObject mData = null;
 
     private static final RequestOptions OPTIONS = new RequestOptions()
@@ -91,8 +92,6 @@ public class GoodsDetailDelegate extends LatteDelegate implements
         //final String mToken=LattePreference.getCustomAppProfile("token");
         final boolean mSign = LattePreference.getAppFlag("SIGN_TAG");
         if (mSign) {
-
-
 //            final CircleImageView animImg = new CircleImageView(getContext());
 //            Glide.with(this)
 //                    .load(mGoodsThumbUrl)
@@ -104,6 +103,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                     .setGoodsId(mGoodsId)
                     .setGoodsDetail(mData)
                     .beginSkuDialog();
+            //getSupportDelegate().start(new MoreGoosCommentDelegate().create(goodsData));
         } else {
             getSupportDelegate().start(new SignInDelegate());
         }
@@ -158,6 +158,24 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                 getSupportDelegate().pop();
             }
         });
+
+        $(R.id.tv__more_comment_tip).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //跳转更多评论
+                getSupportDelegate().
+                        start(MoreGoosCommentDelegate.create(goodsData));
+            }
+        });
+        $(R.id.tv_more_comment_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //跳转更多评论
+                getSupportDelegate().
+                        start(MoreGoosCommentDelegate.create(goodsData));
+            }
+        });
+        tv_goods_comment_count = $(R.id.tv_goods_comment_count);
         mCollapsingToolbarLayout.setContentScrimColor(Color.WHITE);
         mAppBar.addOnOffsetChangedListener(this);
         mCircleTextView.setCircleBackground(Color.RED);
@@ -199,6 +217,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                     @Override
                     public void onSuccess(String response) {
                         LatteLogger.json("goodesdetail", response);
+                        LogUtils.e("goodesdetail", response);
                         mData =
                                 JSON.parseObject(response).getJSONObject("data");
                         if (null == mData) {
@@ -208,6 +227,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                         mGoodesPirce = mData.getDouble("price");
                         initBanner(mData);
                         initGoodsInfo(mData);
+                        initGoodsComment(mData);
                         initPager(mData);
                         setShopCartCount(mData);
                     }
@@ -216,7 +236,7 @@ public class GoodsDetailDelegate extends LatteDelegate implements
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-                        ToastUtil.show(getContext(), "服务器忙，请稍后再试");
+                        // ToastUtil.show(getProxyActivity(), "服务器忙，请稍后再试");
                     }
                 })
                 .build()
@@ -224,11 +244,23 @@ public class GoodsDetailDelegate extends LatteDelegate implements
     }
 
     private void initGoodsInfo(JSONObject data) {
-        final String goodsData = data.toJSONString();
+        goodsData = data.toJSONString();
         getSupportDelegate().
                 loadRootFragment(R.id.frame_goods_info, GoodsInfoDelegate.create(goodsData));
+    }
 
+    String goodsData;
+    int comment_count = 0;
 
+    private void initGoodsComment(JSONObject data) {
+        goodsData = data.toJSONString();
+        try {
+            comment_count = data.getInteger("comment_count");
+        } catch (Exception e) {
+        }
+        tv_goods_comment_count.setText("评论("+comment_count+")");
+        getSupportDelegate().
+                loadRootFragment(R.id.frame_goods_comment, GoodsCommentDelegate.create(goodsData));
     }
 
     private void initBanner(JSONObject data) {

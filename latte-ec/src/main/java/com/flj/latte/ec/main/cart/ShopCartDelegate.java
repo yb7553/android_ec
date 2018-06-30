@@ -74,6 +74,10 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     /*删除数据*/
     void onClickRemoveSelectedItem() {
         final List<MultipleItemEntity> data = mAdapter.getData();
+        if (null == data || data.size() == 0) {
+            ToastUtil.showToast(getContext(), "无物品信息不能进行删除");
+            return;
+        }
         //要删除的数据
         final List<MultipleItemEntity> deleteEntities = new ArrayList<>();
         for (MultipleItemEntity entity : data) {
@@ -105,6 +109,10 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     }
 
     void onClickClear() {
+        if(null==mAdapter|| null==mAdapter.getData() || mAdapter.getData().size()==0){
+            ToastUtil.showToast(getContext(), "无物品信息不能进行清空操作");
+            return;
+        }
         mAdapter.getData().clear();
         mAdapter.notifyDataSetChanged();
         checkItemCount();

@@ -75,6 +75,10 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
     /*删除数据*/
     void onClickRemoveSelectedItem() {
         final List<MultipleItemEntity> data = mAdapter.getData();
+        if (null == data || data.size() == 0) {
+            ToastUtil.showToast(getContext(), "无物品信息不能进行删除");
+            return;
+        }
         //要删除的数据
         final List<MultipleItemEntity> deleteEntities = new ArrayList<>();
         for (MultipleItemEntity entity : data) {
@@ -106,6 +110,10 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
     }
 
     void onClickClear() {
+        if (null == mAdapter || null == mAdapter.getData() || mAdapter.getData().size() == 0) {
+            ToastUtil.showToast(getContext(), "无物品信息不能进行清空操作");
+            return;
+        }
         mAdapter.getData().clear();
         mAdapter.notifyDataSetChanged();
         checkItemCount();
@@ -326,12 +334,32 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
             ToastUtil.showToast(getContext(), "无物品信息不能结算");
             return;
         }
+        //判断是否有库存
+
+        boolean flag = true;
+        //跳转详情
         String cart_good_id = "[";
         for (MultipleItemEntity entity : data) {
             cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_ON_SALE)) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "下架了");
+                flag = false;
+                return;
+            }
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_GOODS)) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
+                flag = false;
+                return;
+            }
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_ATTR)) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
+                flag = false;
+                return;
+            }
         }
+        if (!flag) return;
         cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
-        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
+        getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
     }
 
     @Override
