@@ -68,7 +68,6 @@ public class PersonalDelegate extends BottomItemDelegate {
 
     private void onClickAfterMarker() {
         mArgs.putString(ORDER_TYPE, "after_market");
-
         startOrderListByType();
     }
 

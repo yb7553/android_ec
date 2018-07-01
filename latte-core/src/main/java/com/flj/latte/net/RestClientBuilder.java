@@ -9,6 +9,7 @@ import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.loader.LoaderStyle;
 
 import java.io.File;
+import java.util.List;
 import java.util.WeakHashMap;
 
 import okhttp3.MediaType;
@@ -30,6 +31,7 @@ public final class RestClientBuilder {
     private Context mContext = null;
     private LoaderStyle mLoaderStyle = null;
     private File mFile = null;
+    private List<File> mFiles = null;
     private String mDownloadDir = null;
     private String mExtension = null;
     private String mName = null;
@@ -54,6 +56,10 @@ public final class RestClientBuilder {
 
     public final RestClientBuilder file(File file) {
         this.mFile = file;
+        return this;
+    }
+    public final RestClientBuilder file(List<File> files) {
+        this.mFiles = files;
         return this;
     }
 
@@ -118,7 +124,7 @@ public final class RestClientBuilder {
         return new RestClient(mUrl, PARAMS,
                 mDownloadDir, mExtension, mName,
                 mIRequest, mISuccess, mIFailure,
-                mIError, mBody, mFile, mContext,
+                mIError, mBody, mFile,mFiles, mContext,
                 mLoaderStyle);
     }
 }

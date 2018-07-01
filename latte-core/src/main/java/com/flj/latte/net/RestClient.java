@@ -12,6 +12,8 @@ import com.flj.latte.ui.loader.LatteLoader;
 import com.flj.latte.ui.loader.LoaderStyle;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 import okhttp3.MediaType;
@@ -38,6 +40,7 @@ public final class RestClient {
     private final RequestBody BODY;
     private final LoaderStyle LOADER_STYLE;
     private final File FILE;
+    private final List<File> FILES;
     private final Context CONTEXT;
 
     RestClient(String url,
@@ -51,6 +54,7 @@ public final class RestClient {
                IError error,
                RequestBody body,
                File file,
+               List<File> files,
                Context context,
                LoaderStyle loaderStyle) {
         this.URL = url;
@@ -64,6 +68,7 @@ public final class RestClient {
         this.ERROR = error;
         this.BODY = body;
         this.FILE = file;
+        this.FILES = files;
         this.CONTEXT = context;
         this.LOADER_STYLE = loaderStyle;
     }
@@ -110,6 +115,18 @@ public final class RestClient {
                         MultipartBody.Part.createFormData("file", FILE.getName(), requestBody);
                 call = service.upload(URL, body);
                 break;
+            case UPLOADS:
+                List<MultipartBody.Part> files = new ArrayList<>();
+                for (File file : FILES) {
+                    final RequestBody requestBodys =
+                            RequestBody.create(MediaType.parse(MultipartBody.FORM.toString()), file);
+                    final MultipartBody.Part bodys =
+                            MultipartBody.Part.createFormData("file", file.getName(), requestBodys);
+                    files.add(bodys);
+                }
+                call = service.upLoadFiles(URL, files);
+                break;
+
             default:
                 break;
         }
@@ -163,8 +180,12 @@ public final class RestClient {
         request(HttpMethod.UPLOAD);
     }
 
+    public final void uploads() {
+        request(HttpMethod.UPLOADS);
+    }
+
     public final void download() {
-        new DownloadHandler(URL, PARAMS,REQUEST, DOWNLOAD_DIR, EXTENSION, NAME,
+        new DownloadHandler(URL, PARAMS, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME,
                 SUCCESS, FAILURE, ERROR)
                 .handleDownload();
     }

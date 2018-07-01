@@ -33,7 +33,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
     compile 'com.android.support:support-v4:26.0.0'
-
     //compile files('libs/Rong_IMLib.jar')
 }
 

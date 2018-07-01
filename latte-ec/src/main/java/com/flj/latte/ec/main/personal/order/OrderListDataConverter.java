@@ -17,8 +17,13 @@ public class OrderListDataConverter extends DataConverter {
 
     @Override
     public ArrayList<MultipleItemEntity> convert() {
-
-        final JSONArray array = JSON.parseObject(getJsonData()).getJSONArray("data");
+        JSONArray array = null;
+        try {
+            array = JSON.parseObject(getJsonData()).getJSONArray("data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (null == array) return null;
         final int size = array.size();
         for (int i = 0; i < size; i++) {
             final JSONObject data = array.getJSONObject(i);
@@ -27,17 +32,19 @@ public class OrderListDataConverter extends DataConverter {
             final int id = data.getInteger("orderId");
             final double price = data.getDouble("orderAmount");
             //final String time = data.getString("time");
-            final int orderStatus =data.getInteger("orderStatus");
-
+            final int orderStatus = data.getInteger("orderStatus");
+            final long addTime = data.getInteger("addTime");
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(OrderListItemType.ITEM_ORDER_LIST)
                     .setField(MultipleFields.ID, id)
-                   // .setField(MultipleFields.IMAGE_URL, thumb)
+                    // .setField(MultipleFields.IMAGE_URL, thumb)
                     .setField(MultipleFields.TITLE, title)
                     .setField(OrderItemFields.PRICE, price)
-                   // .setField(OrderItemFields.TIME,time)
+                    // .setField(OrderItemFields.TIME,time)
                     .setField(MultipleFields.TAG, orderStatus)
+                    .setField(OrderItemFields.TIME, addTime)
+
                     .build();
 
             ENTITIES.add(entity);

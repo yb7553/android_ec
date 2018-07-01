@@ -39,4 +39,6 @@
     <color name="text_normal">#666666</color>
     <color name="transparent">#00000000</color>
     <color name="red_sku">#ff9999</color>
+    <color name="red_btn">#ea5504</color>
+
 </resources>
