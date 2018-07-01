@@ -33,7 +33,7 @@ public class GoodsCommentDelegate extends LatteDelegate implements View.OnClickL
     private static final String ARG_GOODS_DATA = "ARG_GOODS_DATA";
     private JSONObject mData = null;
     private RecyclerView rv_comment;
-   // private AppCompatTextView tv_goods_comment_count;
+    // private AppCompatTextView tv_goods_comment_count;
     private int comment_count = 0;
     GoodsCommentAdapter adapter;
     String goodsData;
@@ -97,20 +97,20 @@ public class GoodsCommentDelegate extends LatteDelegate implements View.OnClickL
 
                 })
                 . failure(new IFailure() {
-                            @Override
-                            public void onFailure() {
-                                ToastUtil.show(getContext(), "服务器忙，请稍后再试");
-                            }
-                        })
+                    @Override
+                    public void onFailure() {
+                        ToastUtil.show(getContext(), "服务器忙，请稍后再试");
+                    }
+                })
                 . build()
                 .post();
 
     }
 
     private void initView() {
-      //  $(R.id.tv__more_comment_tip).setOnClickListener(this);
-     //   $(R.id.tv_more_comment_arrow).setOnClickListener(this);
-    //    tv_goods_comment_count = $(R.id.tv_goods_comment_count);
+        //  $(R.id.tv__more_comment_tip).setOnClickListener(this);
+        //   $(R.id.tv_more_comment_arrow).setOnClickListener(this);
+        //    tv_goods_comment_count = $(R.id.tv_goods_comment_count);
         rv_comment = $(R.id.rv_comment);
     }
 

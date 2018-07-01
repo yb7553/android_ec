@@ -9,7 +9,7 @@
         android:id="@+id/tb_shop_cart"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:background="@android:color/holo_orange_dark"
+        android:background="@drawable/shape_buttom_cart"
         android:gravity="center">
 
         <android.support.v7.widget.AppCompatTextView

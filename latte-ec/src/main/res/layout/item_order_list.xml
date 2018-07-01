@@ -1,73 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_marginBottom="2dp"
-    android:background="@android:color/white"
-    android:orientation="horizontal">
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/image_order_list"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            tools:ignore="RtlHardcoded" />
-    </FrameLayout>
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="2dp"
+              android:background="@android:color/white"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tv_order_list_title"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="top"
-            android:layout_weight="1"
-            android:text="Title"
-            tools:ignore="NestedWeights" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/image_order_list"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                tools:ignore="RtlHardcoded"/>
+        </FrameLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_order_list_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:id="@+id/tv_order_list_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
                 android:layout_weight="1"
-                android:gravity="left|center"
-                android:text="price"
-                tools:ignore="RtlHardcoded" />
+                android:text="Title"
+                tools:ignore="NestedWeights"/>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_order_list_time"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="left|center"
-                android:text="time"
-                tools:ignore="RtlHardcoded" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_order_list_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center"
+                    android:text="price"
+                    tools:ignore="RtlHardcoded"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_order_list_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:text="time"
+                    tools:ignore="RtlHardcoded"/>
+            </LinearLayout>
         </LinearLayout>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="{fa-chevron-right}"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText"/>
     </LinearLayout>
 
-    <com.joanzapata.iconify.widget.IconTextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="{fa-chevron-right}"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText" />
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:layout_marginRight="20dp">
 
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_comment_default_btn"
+            android:padding="@dimen/btn_paddsize"
+            android:text="联系客服"
+            android:textColor="@color/common_black"
+            android:textSize="14sp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_comment_select_btn"
+            android:padding="@dimen/btn_paddsize"
+            android:text="  评价  "
+            android:textColor="@color/red_sku"
+            android:textSize="14sp"/>
+    </LinearLayout>
 </LinearLayout>

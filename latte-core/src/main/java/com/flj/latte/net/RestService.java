@@ -1,9 +1,6 @@
 package com.flj.latte.net;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.flj.latte.util.storage.LattePreference;
-
+import java.util.List;
 import java.util.WeakHashMap;
 
 import okhttp3.MultipartBody;
@@ -15,7 +12,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -52,7 +48,6 @@ public interface RestService {
 
     @FormUrlEncoded
     @PUT
-
     Call<String> put(@Url String url, @FieldMap WeakHashMap<String, Object> params);
 
     @PUT
@@ -68,4 +63,8 @@ public interface RestService {
     @Multipart
     @POST
     Call<String> upload(@Url String url, @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST
+    Call<String> upLoadFiles(@Url String url, @Part List<MultipartBody.Part> files);
 }

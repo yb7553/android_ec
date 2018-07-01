@@ -50,11 +50,20 @@ public class GoodsInfoDelegate extends LatteDelegate {
         final AppCompatTextView goodsInfoTitle = $(R.id.tv_goods_info_title);
         final AppCompatTextView goodsInfoDesc = $(R.id.tv_goods_info_desc);
         final AppCompatTextView goodsInfoPrice = $(R.id.tv_goods_info_price);
+        final AppCompatTextView tv_goods_promote=$(R.id.tv_goods_promote);
+        final AppCompatTextView tv_goods_gifts=$(R.id.tv_goods_gifts);
+
         final String name = mData.getString("name");
         final String desc = mData.getString("description");
         final double price = mData.getDouble("price");
+        int is_gifts=mData.getInteger("is_gifts");
+        int is_promote=mData.getInteger("is_promote");
         goodsInfoTitle.setText(name);
         goodsInfoDesc.setText(desc);
         goodsInfoPrice.setText(String.valueOf(price));
+        //促销标志
+        tv_goods_promote.setVisibility(is_promote==1?View.VISIBLE:View.GONE);
+        //赠品标志
+        tv_goods_gifts.setVisibility(is_gifts==1?View.VISIBLE:View.GONE);
     }
 }

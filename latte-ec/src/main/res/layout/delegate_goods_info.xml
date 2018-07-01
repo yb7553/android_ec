@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:background="@android:color/white"
+                                              android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_goods_info_title"
@@ -13,7 +13,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/black"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_goods_info_desc"
@@ -22,8 +22,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_marginTop="10dp"
             android:text="￥"
             android:textColor="@color/app_main"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_goods_info_price"
@@ -46,7 +46,29 @@
             android:layout_marginTop="10dp"
             android:text="1299"
             android:textColor="@color/app_main"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_goods_promote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_tvbtn_show"
+            android:text="  促 销  "
+            android:textColor="@color/red"
+            android:textSize="12sp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_goods_gifts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_tvbtn_show"
+            android:text="  赠 品  "
+            android:textColor="@color/red"
+            android:textSize="12sp"/>
     </android.support.v7.widget.LinearLayoutCompat>
 
 
