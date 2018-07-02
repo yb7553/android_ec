@@ -1,6 +1,7 @@
 package com.flj.latte.ec.detail;
 
 import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
 import android.widget.GridView;
 
 import com.flj.latte.delegates.LatteDelegate;
@@ -9,6 +10,7 @@ import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.ui.recycler.MultipleRecyclerAdapter;
 import com.flj.latte.ui.recycler.MultipleViewHolder;
 import com.flj.latte.ui.widget.StarBar;
+import com.flj.latte.util.storage.LattePreference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -16,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.rong.imkit.RongIM;
 
 /**
  * Copyright (c) 2018. cq Inc. All rights reserved.
@@ -51,6 +55,8 @@ public class MoreGoodsCommentAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView tv_comment = holder.getView(R.id.tv_comment);
                 final AppCompatTextView tv_comment_date = holder.getView(R.id.tv_comment_date);
                 final GridView gv_image = holder.getView(R.id.gv_image);
+                final AppCompatTextView tv_comment_chart = holder.getView(R.id.tv_comment_chart);
+                long userid = entity.getField(CommentItemFields.USERID);
                 nameText.setText(name);
                 starBar.setStarMark(starRank);
                 tv_comment.setText(content);
@@ -69,6 +75,15 @@ public class MoreGoodsCommentAdapter extends MultipleRecyclerAdapter {
                 //加载图片
                 GoodCommentImageAdapter adapter = new GoodCommentImageAdapter(holder.getConvertView().getContext(), images);
                 gv_image.setAdapter(adapter);
+
+                tv_comment_chart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //启动会话界面
+                        if (RongIM.getInstance() != null)
+                            RongIM.getInstance().startPrivateChat(delegate.getContext(), "" + userid, LattePreference.getCustomAppProfile("nickname"));
+                    }
+                });
                 break;
             default:
                 break;

@@ -27,7 +27,7 @@ public class CommentDataConverter extends DataConverter {
             final String content = data.getString("content");
             String userName = data.getString("userName");
             String imgurls = data.getString("imgUrls");
-
+            final long userid = data.getLong("userId");
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(ITEM_COMMENT)
                     .setField(CommentItemFields.ADDTIME, addTime)
@@ -35,6 +35,7 @@ public class CommentDataConverter extends DataConverter {
                     .setField(CommentItemFields.COMMENTRANK, commentRank)
                     .setField(CommentItemFields.USERNAME, userName)
                     .setField(CommentItemFields.IMGURLS, imgurls)
+                    .setField(CommentItemFields.USERID, userid)
                     .build();
             ENTITIES.add(entity);
         }

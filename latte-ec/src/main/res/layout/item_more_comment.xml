@@ -26,8 +26,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:text="姓名"
-                android:textSize="14sp"
-                android:textColor="@color/app_main"/>
+                android:textColor="@color/app_main"
+                android:textSize="14sp"/>
 
             <com.flj.latte.ui.widget.StarBar
                 android:id="@+id/tv_comment_star"
@@ -65,23 +65,42 @@
 
         <GridView
             android:id="@+id/gv_image"
-            android:numColumns="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:numColumns="3">
 
         </GridView>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tv_comment_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:padding="@dimen/btn_paddsize"
-            android:text="时间"
-            android:textSize="14sp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_comment_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bg_comment_select_btn"
+                android:padding="@dimen/btn_paddsize"
+                android:text="   私聊  "
+                android:textColor="@color/red"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_comment_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:padding="@dimen/btn_paddsize"
+                android:text="时间"
+                android:textSize="14sp"/>
+        </RelativeLayout>
 
     </android.support.v7.widget.LinearLayoutCompat>
 
