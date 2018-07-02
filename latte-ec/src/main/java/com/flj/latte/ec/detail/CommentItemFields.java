@@ -10,5 +10,6 @@ public enum CommentItemFields {
     CONTENT,
     IMGURLS,
     STATUS,
-    ADDTIME
+    ADDTIME,
+    USERID
 }
