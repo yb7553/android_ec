@@ -231,11 +231,9 @@ public class UpdateressAddDelegate extends LatteDelegate implements ISuccess, Vi
             @Override
             public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
                 //省份
-
                 if (province != null) {
                     provinceId = Integer.valueOf(province.getId());
                     //provinceId += province.getName();
-
                     address_city.append(province.getName());
                 }
                 //城市

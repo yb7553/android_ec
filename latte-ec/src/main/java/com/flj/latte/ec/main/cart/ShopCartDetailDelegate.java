@@ -87,23 +87,37 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
                 deleteEntities.add(entity);
             }
         }
-        for (MultipleItemEntity entity : deleteEntities) {
-            int removePosition;
-            final int entityPosition = entity.getField(ShopCartItemFields.POSITION);
-            if (entityPosition > mCurrentCount - 1) {
-                removePosition = entityPosition - (mTotalCount - mCurrentCount);
-            } else {
-                removePosition = entityPosition;
-            }
-            if (removePosition <= mAdapter.getItemCount()) {
+        //全量删除
+        if (data.size() == deleteEntities.size()) {
+            for (int i = deleteEntities.size() - 1; i >= 0; i--) {
                 //此处进行移除服务器的数据
-                deleteGoods(mAdapter.getItem(removePosition).getField(MultipleFields.ID));
-                mAdapter.remove(removePosition);
+                deleteGoods(deleteEntities.get(i).getField(MultipleFields.ID));
+                mAdapter.remove(deleteEntities.get(i).getField(ShopCartItemFields.POSITION));
                 mCurrentCount = mAdapter.getItemCount();
-                //删除成功重新设置界面价格
-                mAdapter.calTotalPrice(mAdapter.getData());
                 //更新数据
-                mAdapter.notifyItemRangeChanged(removePosition, mAdapter.getItemCount());
+                mAdapter.notifyItemRangeChanged(deleteEntities.get(i).getField(ShopCartItemFields.POSITION), mAdapter.getItemCount());
+            }
+            //删除成功重新设置界面价格
+            mAdapter.calTotalPrice(mAdapter.getData());
+        } else {
+            for (MultipleItemEntity entity : deleteEntities) {
+                int removePosition;
+                final int entityPosition = entity.getField(ShopCartItemFields.POSITION);
+                if (entityPosition > mCurrentCount - 1) {
+                    removePosition = entityPosition - (mTotalCount - mCurrentCount);
+                } else {
+                    removePosition = entityPosition;
+                }
+                if (removePosition <= mAdapter.getItemCount()) {
+                    //此处进行移除服务器的数据
+                    deleteGoods(mAdapter.getItem(removePosition).getField(MultipleFields.ID));
+                    mAdapter.remove(removePosition);
+                    mCurrentCount = mAdapter.getItemCount();
+                    //删除成功重新设置界面价格
+                    mAdapter.calTotalPrice(mAdapter.getData());
+                    //更新数据
+                    mAdapter.notifyItemRangeChanged(removePosition, mAdapter.getItemCount());
+                }
             }
         }
         checkItemCount();

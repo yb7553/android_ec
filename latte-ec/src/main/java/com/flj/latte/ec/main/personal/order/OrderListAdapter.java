@@ -54,6 +54,16 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView delete = holder.getView(R.id.tv_order_delete);
                 final AppCompatTextView comment = holder.getView(R.id.tv_order_comment);
                 final LinearLayout ll_comment = holder.getView(R.id.ll_comment);
+                final LinearLayout ll_pay = holder.getView(R.id.ll_pay);
+                final AppCompatTextView tv_cancel_order = holder.getView(R.id.tv_cancel_order);
+                final AppCompatTextView tv_order_pay = holder.getView(R.id.tv_order_pay);
+                final LinearLayout ll_send = holder.getView(R.id.ll_send);
+                final AppCompatTextView tv_send_cancel = holder.getView(R.id.tv_send_cancel);
+                final AppCompatTextView tv_send_comm = holder.getView(R.id.tv_send_comm);
+                final LinearLayout ll_confirm = holder.getView(R.id.ll_confirm);
+                final AppCompatTextView tv_confirm_comm = holder.getView(R.id.tv_confirm_comm);
+                final AppCompatTextView tv_confirm_order = holder.getView(R.id.tv_confirm_order);
+
 
                 final String titleVal = entity.getField(MultipleFields.TITLE);
                 final long timeVal = entity.getField(OrderItemFields.TIME);
@@ -71,8 +81,47 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                 price.setText("价格:" + String.valueOf(priceVal));
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 time.setText("时间:" + format.format(new Date(timeVal)));
-                //评论部分处理
-                if (3 == status) {
+                if (0 == status) {
+                    //代付款
+                    ll_pay.setVisibility(View.VISIBLE);
+                    //取消订单
+                    tv_cancel_order.setOnClickListener(view -> {
+
+                    });
+                    //去支付
+                    tv_order_pay.setOnClickListener(view -> {
+
+
+                    });
+                } else if (1 == status) {
+                    //待发货
+                    ll_send.setVisibility(View.VISIBLE);
+                    //取消订单
+                    tv_send_cancel.setOnClickListener(view -> {
+
+                    });
+                    //联系客服
+                    tv_send_comm.setOnClickListener(view -> {
+
+
+                    });
+
+                } else if (2 == status) {
+                    //代收货
+                    ll_confirm.setVisibility(View.VISIBLE);
+                    //联系客服
+                    tv_confirm_comm.setOnClickListener(view -> {
+
+                    });
+                    //确认收货
+                    tv_confirm_order.setOnClickListener(view -> {
+
+
+                    });
+
+
+                } else if (3 == status) {
+                    //评论部分处理
                     ll_comment.setVisibility(View.VISIBLE);
                     delete.setOnClickListener(view -> {
 

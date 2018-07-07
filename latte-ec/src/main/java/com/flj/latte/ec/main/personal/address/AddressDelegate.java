@@ -19,6 +19,7 @@ import com.flj.latte.util.log.LatteLogger;
 import com.flj.latte.util.storage.LattePreference;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -41,6 +42,7 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
         mRecyclerView = $(R.id.rv_address);
         mIconTextView = $(R.id.icon_address_add);
         $(R.id.icon_address_add).setOnClickListener(this);
+        $(R.id.icon_back).setOnClickListener(this);
         initData();
     }
 
@@ -60,34 +62,41 @@ public class AddressDelegate extends LatteDelegate implements ISuccess, View.OnC
                 .post();
     }
 
+    List<MultipleItemEntity> dataList;
+
     @Override
     public void onSuccess(String response) {
         LogUtils.e("AddressDelegate", response);
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
-        final List<MultipleItemEntity> data =
-                new AddressDataConverter().setJsonData(response).convert();
-        final AddressAdapter addressAdapter = new AddressAdapter(data, this);
+        dataList = new AddressDataConverter().setJsonData(response).convert();
+        Collections.reverse(dataList);
+        final AddressAdapter addressAdapter = new AddressAdapter(dataList, this);
         mRecyclerView.setAdapter(addressAdapter);
     }
+
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
-        if (requestCode == 200 && resultCode == RESULT_OK ) {
+        if (requestCode == 200 && resultCode == RESULT_OK) {
             // 在此通过Bundle data 获取返回的数据
             initData();
+          //  dataList.add()
         }
     }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.icon_address_add) {
             onClickAddressAdd();
+        } else if (i == R.id.icon_back) {
+            getSupportDelegate().pop();
         }
     }
 
     // private int recode = 100;
     private void onClickAddressAdd() {
-        getSupportDelegate().startForResult(new AddressAddDelegate(),200);
+        getSupportDelegate().startForResult(new AddressAddDelegate(), 200);
     }
 }
