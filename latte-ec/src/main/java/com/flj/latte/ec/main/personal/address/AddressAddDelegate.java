@@ -63,6 +63,7 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         $(R.id.address_city_layout).setOnClickListener(this);
         $(R.id.btn_address_save).setOnClickListener(this);
+        $(R.id.icon_back).setOnClickListener(this);
         address_city = $(R.id.address_city);
         /**
          * 预先加载仿iOS滚轮实现的全部数据
@@ -80,6 +81,8 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
             showAddress();
         } else if (i == R.id.btn_address_save) {
             commitPersonlAddress();
+        } else if (i == R.id.icon_back) {
+            getSupportDelegate().pop();
         }
     }
 
@@ -121,7 +124,7 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
         address.put("receiverZip", receiverZip);
         address.put("receiverDefault", switch_button.isChecked() ? 1 : 0);
         final String jsonString = JSON.toJSONString(address);
-        LogUtils.e("jsonString",jsonString);
+        LogUtils.e("jsonString", jsonString);
         RestClient.builder()
                 .url(addressUrl)
                 .loader(getContext())
@@ -130,7 +133,7 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
                 .failure(new IFailure() {
                     @Override
                     public void onFailure() {
-                        ToastUtil.show(getContext(),"连接超时");
+                        ToastUtil.show(getContext(), "连接超时");
                     }
                 })
                 .build()
@@ -144,14 +147,14 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
 
     @Override
     public void onSuccess(String response) {
-        LogUtils.e("jsonString",response);
-        if(response.contains("success")){
+        LogUtils.e("jsonString", response);
+        if (response.contains("success")) {
             //加载地址界面
-            ToastUtil.show(getContext(),"添加成功");
+            ToastUtil.show(getContext(), "添加成功");
             setFragmentResult(Activity.RESULT_OK, null);
             getSupportDelegate().pop();
-        }else{
-            ToastUtil.show(getContext(),"添加失败");
+        } else {
+            ToastUtil.show(getContext(), "添加失败");
         }
         //getActivity().finish();
     }
@@ -187,7 +190,7 @@ public class AddressAddDelegate extends LatteDelegate implements ISuccess, View.
                 if (district != null) {
                     districtId = Integer.valueOf(district.getId());
                     Log.d("Test", districtId + "--" + districtId);
-                    address_city.append(district.getName().equalsIgnoreCase(city.getName())? "":district.getName());
+                    address_city.append(district.getName().equalsIgnoreCase(city.getName()) ? "" : district.getName());
                 }
             }
 
