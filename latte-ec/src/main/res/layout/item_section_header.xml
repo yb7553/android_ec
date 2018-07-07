@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:gravity="center|right"
         android:paddingRight="10dp"
-        android:text="more >"
+        android:text="更多 >"
         android:textColor="@color/we_chat_black"
         tools:ignore="HardcodedText" />
 
