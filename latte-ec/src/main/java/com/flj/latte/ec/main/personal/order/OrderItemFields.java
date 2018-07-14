@@ -6,5 +6,18 @@ package com.flj.latte.ec.main.personal.order;
 
 public enum OrderItemFields {
     PRICE,
-    TIME
+    TIME,
+    LSORDERGOODS,
+    STATUSDESC,
+    ADDRESS,
+    USERNAME,
+    DELIVERNAME,
+    PHONE,
+    SENDTIME,
+    GOODSATTR,
+    GOODSNAME,
+    GOODSNUM,
+    GOODSPIC,
+    GOODSID,
+    GOODSPRICE
 }

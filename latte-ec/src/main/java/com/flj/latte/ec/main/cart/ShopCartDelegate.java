@@ -88,7 +88,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         }
         //全量删除
         if (data.size() == deleteEntities.size()) {
-            for (int i = deleteEntities.size()-1; i >= 0; i--) {
+            for (int i = deleteEntities.size() - 1; i >= 0; i--) {
                 //此处进行移除服务器的数据
                 deleteGoods(deleteEntities.get(i).getField(MultipleFields.ID));
                 mAdapter.remove(deleteEntities.get(i).getField(ShopCartItemFields.POSITION));
@@ -343,6 +343,7 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     }
 
     private void onClickShopOrder() {
+        if (null == mAdapter) return;
         ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
         if (null == data || data.size() == 0) {
             ToastUtil.showToast(getContext(), "无物品信息不能结算");
