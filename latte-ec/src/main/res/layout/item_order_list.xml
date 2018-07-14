@@ -5,74 +5,122 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="2dp"
               android:background="@android:color/white"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/dp10"
+              android:paddingRight="@dimen/dp10"
+              android:paddingTop="@dimen/dp10">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/image_order_list"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                tools:ignore="RtlHardcoded"/>
-        </FrameLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_order_list_title"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="top"
-                android:layout_weight="1"
-                android:text="Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/text_light_dark"
+                android:textSize="15sp"
                 tools:ignore="NestedWeights"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_order_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:text=""
+                android:textColor="@color/red_status"
+                android:textSize="15sp"
+                tools:ignore="NestedWeights"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_weight="8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp">
+
+                    <GridView
+                        android:id="@+id/gv_image"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"
+                        android:listSelector="@null"
+                        android:scrollbars="none"
+                        android:numColumns="auto_fit"
+                        android:stretchMode="spacingWidthUniform">
+                    </GridView>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/itv_total"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="共3件 {fa-chevron-right}"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:text="合计:"
+                    android:textSize="@dimen/sp_16"
+                    tools:ignore="RtlHardcoded"/>
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_order_list_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:text="price"
+                    android:gravity="right|center"
+                    android:paddingRight="@dimen/dp10"
+                    android:text="1"
+                    android:textColor="@color/red_status"
+                    android:textSize="@dimen/sp_16"
                     tools:ignore="RtlHardcoded"/>
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/tv_order_list_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="left|center"
-                    android:text="time"
-                    tools:ignore="RtlHardcoded"/>
+
             </LinearLayout>
         </LinearLayout>
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="{fa-chevron-right}"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_pay"
         android:layout_width="wrap_content"
@@ -80,8 +128,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_marginBottom="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="20dp">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_cancel_order"
@@ -104,6 +151,7 @@
             android:textColor="@color/red_sku"
             android:textSize="14sp"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_send"
         android:layout_width="wrap_content"
@@ -111,8 +159,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_marginBottom="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="20dp">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_send_cancel"
@@ -135,6 +182,7 @@
             android:textColor="@color/red_sku"
             android:textSize="14sp"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_confirm"
         android:layout_width="wrap_content"
@@ -142,8 +190,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_marginBottom="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="20dp">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_confirm_comm"
@@ -166,6 +213,7 @@
             android:textColor="@color/red_sku"
             android:textSize="14sp"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_comment"
         android:layout_width="wrap_content"
@@ -173,8 +221,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_marginBottom="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="20dp">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_order_delete"

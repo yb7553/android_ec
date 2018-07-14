@@ -199,5 +199,19 @@
         <item name="android:enabled">false</item>
     </style>
 
+    <!-- 按钮样式-->
+    <style name="Order_Btn_linnear">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_gravity">right|bottom</item>
+        <item name="android:gravity">right|bottom</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:visibility">gone</item>
+
+    </style>
 
 </resources>

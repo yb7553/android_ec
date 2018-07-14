@@ -11,14 +11,30 @@
         android:layout_height="75dp"
         android:background="@drawable/shape_buttom_cart"
         android:gravity="center">
-
-        <android.support.v7.widget.AppCompatTextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="订单列表"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:layout_height="match_parent">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/icon_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="{fa-chevron-left}"
+                android:textColor="@android:color/white"
+                android:textSize="26sp"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_address_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="我的订单"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView

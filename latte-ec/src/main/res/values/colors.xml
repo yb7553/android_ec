@@ -40,5 +40,7 @@
     <color name="transparent">#00000000</color>
     <color name="red_sku">#ff9999</color>
     <color name="red_btn">#ea5504</color>
+    <color name="red_status">#ea5504</color>
+    <color name="order_status">#ffcc66</color>
 
 </resources>

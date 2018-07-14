@@ -46,13 +46,15 @@ public class OrderListDelegate extends LatteDelegate {
         final Bundle args = getArguments();
         if (args != null) {
             mType = args.getString(PersonalDelegate.ORDER_TYPE);
-
         }
     }
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         mRecyclerView = $(R.id.rv_order_list);
+        $(R.id.icon_back).setOnClickListener(view -> {
+            getSupportDelegate().pop();
+        });
     }
 
     @Override
