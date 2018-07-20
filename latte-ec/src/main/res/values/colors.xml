@@ -42,5 +42,5 @@
     <color name="red_btn">#ea5504</color>
     <color name="red_status">#ea5504</color>
     <color name="order_status">#ffcc66</color>
-
+    <color name="red_t">#ff9999</color>
 </resources>
