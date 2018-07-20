@@ -7,9 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
@@ -20,6 +23,7 @@ import com.flj.latte.net.callback.ISuccess;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
 import com.flj.latte.util.log.LatteLogger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -32,6 +36,11 @@ public class OrderListDelegate extends LatteDelegate {
     private String mType = null;
     private final int RESULTCODE = 200;
     private RecyclerView mRecyclerView = null;
+    private LinearLayout ll_status;
+    private TextView tv_pay, tv_all, tv_send_goods, tv_confirm_goods, tv_comment;
+    private View v_pay, v_all, v_send_goods, v_confirm_goods, v_comment;
+    List<MultipleItemEntity> allList, payList, sendgoodsList, confirmGoodsList, commentList;
+
 
     @Override
     public Object setLayout() {
@@ -52,8 +61,111 @@ public class OrderListDelegate extends LatteDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         mRecyclerView = $(R.id.rv_order_list);
+        tv_pay = $(R.id.tv_pay);
+        tv_all = $(R.id.tv_all);
+        tv_send_goods = $(R.id.tv_send_goods);
+        tv_confirm_goods = $(R.id.tv_confirm_goods);
+        tv_comment = $(R.id.tv_comment);
+
+        v_pay = $(R.id.v_pay);
+        v_all = $(R.id.v_all);
+        v_send_goods = $(R.id.v_send_goods);
+        v_confirm_goods = $(R.id.v_confirm_goods);
+        v_comment = $(R.id.v_comment);
+        ll_status = $(R.id.ll_statuss);
+
         $(R.id.icon_back).setOnClickListener(view -> {
             getSupportDelegate().pop();
+        });
+        $(R.id.ll_all).setOnClickListener((View view) -> {
+            tv_all.setTextColor(getResources().getColor(R.color.color_text_dark));
+            tv_pay.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_send_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_confirm_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_comment.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            v_all.setVisibility(View.VISIBLE);
+            v_pay.setVisibility(View.INVISIBLE);
+            v_send_goods.setVisibility(View.INVISIBLE);
+            v_confirm_goods.setVisibility(View.INVISIBLE);
+            v_comment.setVisibility(View.INVISIBLE);
+            adapter = new OrderListAdapter(OrderListDelegate.this, allList, -1);
+            mRecyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+
+
+        });
+        $(R.id.ll_pay).setOnClickListener(view -> {
+            tv_all.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_pay.setTextColor(getResources().getColor(R.color.color_text_dark));
+            tv_send_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_confirm_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_comment.setTextColor(getResources().getColor(R.color.color_dark_gray));
+
+            v_all.setVisibility(View.INVISIBLE);
+            v_pay.setVisibility(View.VISIBLE);
+            v_send_goods.setVisibility(View.INVISIBLE);
+            v_confirm_goods.setVisibility(View.INVISIBLE);
+            v_comment.setVisibility(View.INVISIBLE);
+
+            adapter = new OrderListAdapter(OrderListDelegate.this, payList, 0);
+            mRecyclerView.setAdapter(adapter);adapter.notifyDataSetChanged();
+            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+
+        });
+        $(R.id.ll_send_goods).setOnClickListener(view -> {
+            tv_all.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_pay.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_send_goods.setTextColor(getResources().getColor(R.color.color_text_dark));
+            tv_confirm_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_comment.setTextColor(getResources().getColor(R.color.color_dark_gray));
+
+            v_all.setVisibility(View.INVISIBLE);
+            v_pay.setVisibility(View.INVISIBLE);
+            v_send_goods.setVisibility(View.VISIBLE);
+            v_confirm_goods.setVisibility(View.INVISIBLE);
+            v_comment.setVisibility(View.INVISIBLE);
+
+            adapter = new OrderListAdapter(OrderListDelegate.this, sendgoodsList, 1);
+            mRecyclerView.setAdapter(adapter);adapter.notifyDataSetChanged();
+            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+
+        });
+        $(R.id.ll_confirm_goods).setOnClickListener(view -> {
+            tv_all.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_pay.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_send_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_confirm_goods.setTextColor(getResources().getColor(R.color.color_text_dark));
+            tv_comment.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            v_all.setVisibility(View.INVISIBLE);
+            v_pay.setVisibility(View.INVISIBLE);
+            v_send_goods.setVisibility(View.INVISIBLE);
+            v_confirm_goods.setVisibility(View.VISIBLE);
+            v_comment.setVisibility(View.INVISIBLE);
+
+            adapter = new OrderListAdapter(OrderListDelegate.this, confirmGoodsList, 2);
+            mRecyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+
+
+        });
+        $(R.id.ll_comment).setOnClickListener(view -> {
+            tv_all.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_pay.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_send_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_confirm_goods.setTextColor(getResources().getColor(R.color.color_dark_gray));
+            tv_comment.setTextColor(getResources().getColor(R.color.color_text_dark));
+            v_all.setVisibility(View.INVISIBLE);
+            v_pay.setVisibility(View.INVISIBLE);
+            v_send_goods.setVisibility(View.INVISIBLE);
+            v_confirm_goods.setVisibility(View.INVISIBLE);
+            v_comment.setVisibility(View.VISIBLE);
+
+            adapter = new OrderListAdapter(OrderListDelegate.this, commentList, 3);
+            mRecyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+
         });
     }
 
@@ -68,8 +180,9 @@ public class OrderListDelegate extends LatteDelegate {
 
         switch (mType) {
             case "all":
+                ll_status.setVisibility(View.VISIBLE);
                 weakHashMap.put("page", 1);
-                weakHashMap.put("per_page", 10);
+                weakHashMap.put("per_page", 20);
                 break;
             case "pay":
                 weakHashMap.put("page", 1);
@@ -113,8 +226,10 @@ public class OrderListDelegate extends LatteDelegate {
                         mRecyclerView.setLayoutManager(manager);
                         final List<MultipleItemEntity> data =
                                 new OrderListDataConverter().setJsonData(response).convert();
+                        allList = data;
                         adapter = new OrderListAdapter(OrderListDelegate.this, data, finalStatus);
                         mRecyclerView.setAdapter(adapter);
+                        sortlist(data);
                         mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
                     }
                 })
@@ -127,6 +242,32 @@ public class OrderListDelegate extends LatteDelegate {
                 })
                 .build()
                 .post();
+    }
+
+    //对 总数据进行分类
+    private void sortlist(List<MultipleItemEntity> data) {
+        payList = new ArrayList<MultipleItemEntity>();
+        sendgoodsList = new ArrayList<MultipleItemEntity>();
+        confirmGoodsList = new ArrayList<MultipleItemEntity>();
+        commentList = new ArrayList<MultipleItemEntity>();
+        if (null == data) return;
+        for (MultipleItemEntity entity :
+                data) {
+            if (StringUtils.isEmpty(entity.getField(OrderItemFields.STATUSDESC))) {
+                commentList.add(entity);
+            } else {
+                if (entity.getField(OrderItemFields.STATUSDESC).toString().contains("付款"))
+                    payList.add(entity);
+                if (entity.getField(OrderItemFields.STATUSDESC).toString().contains("发货"))
+                    sendgoodsList.add(entity);
+                if (entity.getField(OrderItemFields.STATUSDESC).toString().contains("收货"))
+                    confirmGoodsList.add(entity);
+                if (entity.getField(OrderItemFields.STATUSDESC).toString().contains("评价"))
+                    commentList.add(entity);
+            }
+
+        }
+
     }
 
     public int getResultCode() {

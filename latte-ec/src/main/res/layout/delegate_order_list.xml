@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_background"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_background"
+              android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb_shop_cart"
@@ -11,6 +11,7 @@
         android:layout_height="75dp"
         android:background="@drawable/shape_buttom_cart"
         android:gravity="center">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -37,9 +38,157 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <LinearLayout
+        android:id="@+id/ll_statuss"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/dp10"
+        android:paddingRight="@dimen/dp10"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/ll_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="全  部"
+                android:textColor="@color/common_black"/>
+
+            <View
+                android:id="@+id/v_all"
+                android:layout_width="fill_parent"
+                android:layout_height="4dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/tv_line"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="待付款"
+                android:textColor="@color/color_dark_gray"/>
+
+            <View
+                android:id="@+id/v_pay"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/tv_line"
+
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_send_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_send_goods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="待配送"
+                android:textColor="@color/color_dark_gray"/>
+
+            <View
+                android:id="@+id/v_send_goods"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/tv_line"
+
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_confirm_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_confirm_goods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="待收货"
+                android:textColor="@color/color_dark_gray"/>
+
+            <View
+                android:id="@+id/v_confirm_goods"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/tv_line"
+
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="待评价"
+                android:textColor="@color/color_dark_gray"/>
+
+            <View
+                android:id="@+id/v_comment"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/tv_line"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_order_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"/>
 </LinearLayout>

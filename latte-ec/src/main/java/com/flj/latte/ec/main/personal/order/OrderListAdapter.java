@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.flj.latte.ec.R;
@@ -114,49 +115,10 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                // time.setText("时间:" + format.format(new Date(timeVal)));
                 tv_order_status.setText(order_status);
-
-                if (0 == status) {
-                    //代付款
-                    ll_pay.setVisibility(View.VISIBLE);
-                    //取消订单
-                    tv_cancel_order.setOnClickListener(view -> {
-
-                    });
-                    //去支付
-                    tv_order_pay.setOnClickListener(view -> {
-
-
-                    });
-                } else if (1 == status) {
-                    //待发货
-                    ll_send.setVisibility(View.VISIBLE);
-                    //取消订单
-                    tv_send_cancel.setOnClickListener(view -> {
-
-                    });
-                    //联系客服
-                    tv_send_comm.setOnClickListener(view -> {
-
-
-                    });
-
-                } else if (2 == status) {
-                    //代收货
-                    ll_confirm.setVisibility(View.VISIBLE);
-                    //联系客服
-                    tv_confirm_comm.setOnClickListener(view -> {
-
-                    });
-                    //确认收货
-                    tv_confirm_order.setOnClickListener(view -> {
-
-
-                    });
-
-
-                } else if (3 == status) {
+                if(StringUtils.isEmpty(order_status)){
                     //评论部分处理
                     ll_comment.setVisibility(View.VISIBLE);
+                    ll_pay.setVisibility(View.GONE);
                     delete.setOnClickListener(view -> {
 
                     });
@@ -165,6 +127,58 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                                         create(orderId, 0, holder.getPosition()),
                                 orderListDelegate.getResultCode());
                     });
+                }else {
+                    if (order_status.contains("付款")) {
+                        //代付款
+                        ll_pay.setVisibility(View.VISIBLE);
+                        //取消订单
+                        tv_cancel_order.setOnClickListener(view -> {
+
+                        });
+                        //去支付
+                        tv_order_pay.setOnClickListener(view -> {
+
+
+                        });
+                    } else if (order_status.contains("发货")) {
+                        //待发货
+                        ll_send.setVisibility(View.VISIBLE);
+                        //取消订单
+                        tv_send_cancel.setOnClickListener(view -> {
+
+                        });
+                        //联系客服
+                        tv_send_comm.setOnClickListener(view -> {
+
+
+                        });
+
+                    } else if (order_status.contains("收货")) {
+                        //代收货
+                        ll_confirm.setVisibility(View.VISIBLE);
+                        //联系客服
+                        tv_confirm_comm.setOnClickListener(view -> {
+
+                        });
+                        //确认收货
+                        tv_confirm_order.setOnClickListener(view -> {
+
+
+                        });
+
+
+                    } else if (order_status.contains("评价")) {
+                        //评论部分处理
+                        ll_comment.setVisibility(View.VISIBLE);
+                        delete.setOnClickListener(view -> {
+
+                        });
+                        comment.setOnClickListener(view -> {
+                            orderListDelegate.getSupportDelegate().startForResult(new OrderCommentDelegate().
+                                            create(orderId, 0, holder.getPosition()),
+                                    orderListDelegate.getResultCode());
+                        });
+                    }
                 }
                 break;
             default:
