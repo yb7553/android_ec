@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="待配送"
+                android:text="待发货"
                 android:textColor="@color/color_dark_gray"/>
 
             <View

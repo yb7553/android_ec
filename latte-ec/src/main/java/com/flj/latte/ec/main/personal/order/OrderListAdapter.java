@@ -115,6 +115,7 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                // time.setText("时间:" + format.format(new Date(timeVal)));
                 tv_order_status.setText(order_status);
+
                 if(StringUtils.isEmpty(order_status)){
                     //评论部分处理
                     ll_comment.setVisibility(View.VISIBLE);
