@@ -2,6 +2,7 @@ package com.flj.latte.ec.main.personal.order;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
@@ -69,6 +70,7 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                 final AppCompatTextView tv_confirm_order = holder.getView(R.id.tv_confirm_order);
                 final IconTextView itv_total = holder.getView(R.id.itv_total);
                 final AppCompatTextView tv_order_status = holder.getView(R.id.tv_order_status);
+                final LinearLayout ll_item = holder.getView(R.id.ll_item);
 
 
                 final String titleVal = entity.getField(MultipleFields.TITLE);
@@ -125,7 +127,7 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                     });
                     comment.setOnClickListener(view -> {
                         orderListDelegate.getSupportDelegate().startForResult(new OrderCommentDelegate().
-                                        create(orderId, 0, holder.getPosition()),
+                                        create(orderId, 0, holder.getPosition(), images),
                                 orderListDelegate.getResultCode());
                     });
                 }else {
@@ -176,14 +178,68 @@ public class OrderListAdapter extends MultipleRecyclerAdapter {
                         });
                         comment.setOnClickListener(view -> {
                             orderListDelegate.getSupportDelegate().startForResult(new OrderCommentDelegate().
-                                            create(orderId, 0, holder.getPosition()),
+                                            create(orderId, 0, holder.getPosition(),images),
                                     orderListDelegate.getResultCode());
                         });
                     }
                 }
+                //跳转详情
+                gv_image.setOnItemClickListener((adapterView, view, i, l) -> {
+                    long send_time = entity.getField(OrderItemFields.SENDTIME);
+                    String address_address = entity.getField(OrderItemFields.ADDRESS);
+                    String address_phone = entity.getField(OrderItemFields.PHONE);
+                    String address_name = entity.getField(OrderItemFields.USERNAME);
+                    String send_mode = entity.getField(OrderItemFields.DELIVERNAME);
+                    OrderDetailDelegate orderDetailDelegate = new OrderDetailDelegate();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("order_status", order_status);
+                    bundle.putString("status_tip", "订单有疑问？请联系客服进行处理");
+                    bundle.putString("address_name", address_name);
+                    bundle.putString("address_phone", address_phone);
+                    bundle.putString("send_mode", send_mode);
+                    bundle.putString("address_address", address_address);
+                    bundle.putLong("send_time", send_time);
+                    bundle.putDouble("goods_price", priceVal);
+                    bundle.putDouble("send_price", 0.00);
+                    bundle.putDouble("goods_off", 0.00);
+                    bundle.putDouble("order_total", priceVal);
+                    bundle.putString("lsOrderGoods", lsOrderGoods);
+                    bundle.putString("orderIdStr", titleVal);
+                    bundle.putInt("orderId", orderId);
+                    orderDetailDelegate.setArguments(bundle);
+                    orderListDelegate.getSupportDelegate().start(orderDetailDelegate);
+                });
+                //跳转详情
+                ll_item.setOnClickListener(view -> {
+                    long send_time = entity.getField(OrderItemFields.SENDTIME);
+                    String address_address = entity.getField(OrderItemFields.ADDRESS);
+                    String address_phone = entity.getField(OrderItemFields.PHONE);
+                    String address_name = entity.getField(OrderItemFields.USERNAME);
+                    String send_mode= entity.getField(OrderItemFields.DELIVERNAME);
+                    OrderDetailDelegate orderDetailDelegate = new OrderDetailDelegate();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("order_status", order_status);
+                    bundle.putString("status_tip", "订单有疑问？请联系客服进行处理");
+                    bundle.putString("address_name", address_name);
+                    bundle.putString("address_phone", address_phone);
+                    bundle.putString("send_mode", send_mode);
+                    bundle.putString("address_address", address_address);
+                    bundle.putLong("send_time", send_time);
+                    bundle.putDouble("goods_price", priceVal);
+                    bundle.putDouble("send_price", 0.00);
+                    bundle.putDouble("goods_off", 0.00);
+                    bundle.putDouble("order_total", priceVal);
+                    bundle.putString("lsOrderGoods", lsOrderGoods);
+                    bundle.putString("orderIdStr",titleVal);
+                    bundle.putInt("orderId",orderId);
+                    orderDetailDelegate.setArguments(bundle);
+                    orderListDelegate.getSupportDelegate().start(orderDetailDelegate);
+
+                });
                 break;
             default:
                 break;
         }
     }
+
 }
