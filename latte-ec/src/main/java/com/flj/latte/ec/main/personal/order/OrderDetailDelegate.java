@@ -45,7 +45,7 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
     private double double_order_total;
     private String str_lsOrderGoods;
     private String orderIdStr;//订单号
-    private int orderId;//评论的id,单号？
+    private int orderId;//评论的id,单号？？
     private RecyclerView rv_goods_list;
     private OrderGoodsAdapter mAdapter;
 
