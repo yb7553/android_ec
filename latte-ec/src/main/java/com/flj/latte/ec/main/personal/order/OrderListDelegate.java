@@ -91,7 +91,7 @@ public class OrderListDelegate extends LatteDelegate {
             adapter = new OrderListAdapter(OrderListDelegate.this, allList, -1);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+            //mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
 
 
         });
@@ -110,7 +110,7 @@ public class OrderListDelegate extends LatteDelegate {
 
             adapter = new OrderListAdapter(OrderListDelegate.this, payList, 0);
             mRecyclerView.setAdapter(adapter);adapter.notifyDataSetChanged();
-            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+          //  mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
 
         });
         $(R.id.ll_send_goods).setOnClickListener(view -> {
@@ -128,7 +128,7 @@ public class OrderListDelegate extends LatteDelegate {
 
             adapter = new OrderListAdapter(OrderListDelegate.this, sendgoodsList, 1);
             mRecyclerView.setAdapter(adapter);adapter.notifyDataSetChanged();
-            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+            //mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
 
         });
         $(R.id.ll_confirm_goods).setOnClickListener(view -> {
@@ -145,7 +145,8 @@ public class OrderListDelegate extends LatteDelegate {
 
             adapter = new OrderListAdapter(OrderListDelegate.this, confirmGoodsList, 2);
             mRecyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+            adapter.notifyDataSetChanged();
+            //mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
 
 
         });
@@ -164,7 +165,7 @@ public class OrderListDelegate extends LatteDelegate {
             adapter = new OrderListAdapter(OrderListDelegate.this, commentList, 3);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+           // mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
 
         });
     }
@@ -230,7 +231,7 @@ public class OrderListDelegate extends LatteDelegate {
                         adapter = new OrderListAdapter(OrderListDelegate.this, data, finalStatus);
                         mRecyclerView.setAdapter(adapter);
                         sortlist(data);
-                        mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
+                        //mRecyclerView.addOnItemTouchListener(new OrderListClickListener(OrderListDelegate.this));
                     }
                 })
                 .error(new IError() {

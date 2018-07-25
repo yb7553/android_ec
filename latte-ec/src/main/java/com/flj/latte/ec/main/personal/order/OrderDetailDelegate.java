@@ -1,5 +1,6 @@
 package com.flj.latte.ec.main.personal.order;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,8 +15,11 @@ import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.utils.Utils;
 import com.flj.latte.ui.recycler.MultipleItemEntity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (c) 2018. cq Inc. All rights reserved.
@@ -40,6 +44,8 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
     private double double_goods_off;
     private double double_order_total;
     private String str_lsOrderGoods;
+    private String orderIdStr;//订单号
+    private int orderId;//评论的id,单号？？
     private RecyclerView rv_goods_list;
     private OrderGoodsAdapter mAdapter;
 
@@ -91,11 +97,13 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
             double_goods_off = args.getDouble("goods_off");
             double_order_total = args.getDouble("order_total");
             str_lsOrderGoods = args.getString("lsOrderGoods");
+            orderIdStr = args.getString("orderIdStr");
+            orderId= args.getInt("orderId");
         }
         order_status.setText(str_order_status == null ? "待评价" : str_order_status);
         status_tip.setText(str_status_tip);
         address_name.append(str_address_name);
-        address_phone.setText(Utils.getStringForX(str_address_phone,3,4));
+        address_phone.setText(Utils.getStringForX(str_address_phone, 3, 4));
         send_mode.append(StringUtils.isEmpty(str_send_mode) ? "随机" : (str_send_mode + " 配送"));
         send_time.append(int_send_time == 0 ? "立即配送" : "");
         address_address.append(str_address_address);
@@ -104,8 +112,8 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
         goods_off.append("" + double_goods_off);
         order_total.append("" + double_order_total);
         //显示商品详情:
-        rv_goods_list=$(R.id.rv_goods_list);
-       // rv_goods_list
+        rv_goods_list = $(R.id.rv_goods_list);
+        // rv_goods_list
         final ArrayList<MultipleItemEntity> data =
                 new GoodsDataConverter()
                         .setJsonData(str_lsOrderGoods)
@@ -173,14 +181,23 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
             delete.setOnClickListener(view -> {
 
             });
-            comment.setOnClickListener(view -> {
+            List<lsOrderGoodsBean> list = new Gson().fromJson(str_lsOrderGoods, new TypeToken<List<lsOrderGoodsBean>>() {
+            }.getType());
 
+            final List<String> images = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                images.add(list.get(i).getGoodspic());
+            }
+            comment.setOnClickListener(view -> {
+                getSupportDelegate().startForResult(new OrderCommentDelegate().
+                                create(orderId, 0, 0, images),
+                        RESULTCODE);
             });
         }
 
-       // ScrollView sView = $(R.id.scrollView);
+        // ScrollView sView = $(R.id.scrollView);
         //sView.setVerticalScrollBarEnabled(false); //禁用垂直滚动
-       // sView.setHorizontalScrollBarEnabled(false); //禁用水平滚动
+        // sView.setHorizontalScrollBarEnabled(false); //禁用水平滚动
     }
 
     @Override
@@ -188,6 +205,13 @@ public class OrderDetailDelegate extends LatteDelegate implements View.OnClickLi
         int id = view.getId();
         if (R.id.icon_back == id) {
             getSupportDelegate().pop();
+        }
+    }
+    private final int RESULTCODE = 200;
+    @Override
+    public void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == RESULTCODE && resultCode == Activity.RESULT_OK) {
         }
     }
 }

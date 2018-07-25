@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.bumptech.glide.Glide;
 import com.flj.latte.delegates.LatteDelegate;
 import com.flj.latte.ec.R;
 import com.flj.latte.ec.common.http.api.API;
@@ -44,11 +46,12 @@ public class OrderCommentDelegate extends LatteDelegate {
     private StarBar mStarLayout = null;
     private AutoPhotoLayout mAutoPhotoLayout = null;
     private AppCompatEditText comment;
+    private AppCompatImageView img_order_comment;
     int idValue;
     int commentType;
     int position;
     android.support.v7.widget.Toolbar tb_shop_cart;
-
+    List<String> images;
     void onClickSubmit(String fileId) {
         final String goodesdetailUrl = API.Config.getDomain() + API.INSERT_COMMENT;
         LatteLogger.d("IUDHAS", goodesdetailUrl);
@@ -113,11 +116,12 @@ public class OrderCommentDelegate extends LatteDelegate {
         return R.layout.delegate_order_comment;
     }
 
-    public static OrderCommentDelegate create(int idValue, int commentType, int position) {
+    public static OrderCommentDelegate create(int idValue, int commentType, int position, List<String> images) {
         final Bundle args = new Bundle();
         args.putInt("idValue", idValue);
         args.putInt("commentType", commentType);
         args.putInt("position", position);
+        args.putStringArrayList("images", (ArrayList<String>) images);
         final OrderCommentDelegate delegate = new OrderCommentDelegate();
         delegate.setArguments(args);
         return delegate;
@@ -130,14 +134,19 @@ public class OrderCommentDelegate extends LatteDelegate {
             idValue = args.getInt("idValue");
             commentType = args.getInt("commentType");
             position = args.getInt("position");
+            images=args.getStringArrayList("images");
         }
         mStarLayout = $(R.id.custom_star_layout);
         mStarLayout.setIntegerMark(true);
         mStarLayout.setOnClick(true);
         mAutoPhotoLayout = $(R.id.custom_auto_photo_layout);
+        img_order_comment=$(R.id.img_order_comment);
         tb_shop_cart = getProxyActivity().findViewById(R.id.tb_shop_cart);
         tb_shop_cart.setBackgroundColor(Color.parseColor("#ff9999"));
         comment = $(R.id.et_order_comment);
+        Glide.with(this)
+                .load(images.get(0))
+                .into(img_order_comment);
 
         $(R.id.top_tv_comment_commit).setOnClickListener(new View.OnClickListener() {
             @Override
