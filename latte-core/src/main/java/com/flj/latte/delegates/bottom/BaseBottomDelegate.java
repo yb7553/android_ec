@@ -124,5 +124,6 @@ public abstract class BaseBottomDelegate extends LatteDelegate implements View.O
         getSupportDelegate().showHideFragment(ITEM_DELEGATES.get(tabIndex), ITEM_DELEGATES.get(mCurrentDelegate));
         //注意先后顺序
         mCurrentDelegate = tabIndex;
+
     }
 }

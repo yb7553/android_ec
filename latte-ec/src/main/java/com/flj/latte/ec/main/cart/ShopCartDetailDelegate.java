@@ -353,19 +353,22 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
         boolean flag = true;
         //跳转详情
         String cart_good_id = "[";
+        int selectCount = 0;
         for (MultipleItemEntity entity : data) {
             cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";
-            if (!(boolean) entity.getField(ShopCartItemFields.IS_ON_SALE)) {
+            boolean isSelect = entity.getField(ShopCartItemFields.IS_SELECTED);
+            if (isSelect) ++selectCount;
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_ON_SALE) && isSelect) {
                 ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "下架了");
                 flag = false;
                 return;
             }
-            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_GOODS)) {
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_GOODS) && isSelect) {
                 ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
                 flag = false;
                 return;
             }
-            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_ATTR)) {
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_ATTR) && isSelect) {
                 ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
                 flag = false;
                 return;
@@ -373,6 +376,10 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
         }
         if (!flag) return;
         cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
+        if (selectCount == 0) {
+            ToastUtil.showToast(getContext(), "请选择需要购买的商品");
+            return;
+        }
         getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
     }
 

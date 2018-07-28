@@ -47,11 +47,14 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
         if (null == data) return;
         //初始化总价
         for (MultipleItemEntity entity : data) {
-            final double price = entity.getField(ShopCartItemFields.PRICE);
-            final int count = entity.getField(ShopCartItemFields.COUNT);
-            //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
-            final double total = Utils.mul(price, (double) count);
-            mTotalPrice = Utils.add(mTotalPrice, total);
+            boolean isSelect = entity.getField(ShopCartItemFields.IS_SELECTED);
+            if (isSelect) {
+                final double price = entity.getField(ShopCartItemFields.PRICE);
+                final int count = entity.getField(ShopCartItemFields.COUNT);
+                //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
+                final double total = Utils.mul(price, (double) count);
+                mTotalPrice = Utils.add(mTotalPrice, total);
+            }
         }
         //添加购物测item布局
         addItemType(ShopCartItemType.SHOP_CART_ITEM, R.layout.item_shop_cart);
@@ -59,6 +62,19 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
 
     public void setIsSelectedAll(boolean isSelectedAll) {
         this.mIsSelectedAll = isSelectedAll;
+        mTotalPrice = 0.00;
+        if (mIsSelectedAll) {
+            //全选计算金额
+            //初始化总价
+            for (MultipleItemEntity entity : getData()) {
+                final double price = entity.getField(ShopCartItemFields.PRICE);
+                final int count = entity.getField(ShopCartItemFields.COUNT);
+                //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
+                final double total = Utils.mul(price, (double) count);
+                mTotalPrice = Utils.add(mTotalPrice, total);
+            }
+        }
+        mCartItemListener.onItemClick(mTotalPrice);
     }
 
     public void setCartItemListener(ICartItemListener listener) {
@@ -70,14 +86,17 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
     }
 
     public double calTotalPrice(List<MultipleItemEntity> data) {
-        mTotalPrice=0.00;
+        mTotalPrice = 0.00;
         //初始化总价
         for (MultipleItemEntity entity : data) {
-            final double price = entity.getField(ShopCartItemFields.PRICE);
-            final int count = entity.getField(ShopCartItemFields.COUNT);
-            //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
-            final double total = Utils.mul(price, (double) count);
-            mTotalPrice = Utils.add(mTotalPrice, total);
+            boolean isSelect = entity.getField(ShopCartItemFields.IS_SELECTED);
+            if (isSelect) {
+                final double price = entity.getField(ShopCartItemFields.PRICE);
+                final int count = entity.getField(ShopCartItemFields.COUNT);
+                //Double类型加减乘除有精度的，不能用普通的加减乘除来计算
+                final double total = Utils.mul(price, (double) count);
+                mTotalPrice = Utils.add(mTotalPrice, total);
+            }
         }
         mCartItemListener.onItemClick(mTotalPrice);
         return mTotalPrice;
@@ -138,6 +157,7 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
                                     (ContextCompat.getColor(Latte.getApplicationContext(), R.color.app_main));
                             entity.setField(ShopCartItemFields.IS_SELECTED, true);
                         }
+                        calTotalPrice(getData());
                     }
                 });
                 //添加加减事件
@@ -164,9 +184,12 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
                                             countNum--;
                                             tvCount.setText(String.valueOf(countNum));
                                             if (mCartItemListener != null) {
-                                                mTotalPrice = Utils.subtract(mTotalPrice, price);
-                                                final double itemTotal = Utils.mul(countNum, price);
-                                                mCartItemListener.onItemClick(itemTotal);
+                                                final boolean currentSelected = entity.getField(ShopCartItemFields.IS_SELECTED);
+                                                if (currentSelected) {
+                                                    mTotalPrice = Utils.subtract(mTotalPrice, price);
+                                                    final double itemTotal = Utils.mul(countNum, price);
+                                                    mCartItemListener.onItemClick(itemTotal);
+                                                }
                                             }
                                         }
                                     })
@@ -198,9 +221,12 @@ public final class ShopCartAdapter extends MultipleRecyclerAdapter {
                                         countNum++;
                                         tvCount.setText(String.valueOf(countNum));
                                         if (mCartItemListener != null) {
-                                            mTotalPrice = Utils.add(mTotalPrice, price);
-                                            final double itemTotal = Utils.mul(countNum, price);
-                                            mCartItemListener.onItemClick(itemTotal);
+                                            final boolean currentSelected = entity.getField(ShopCartItemFields.IS_SELECTED);
+                                            if (currentSelected) {
+                                                mTotalPrice = Utils.add(mTotalPrice, price);
+                                                final double itemTotal = Utils.mul(countNum, price);
+                                                mCartItemListener.onItemClick(itemTotal);
+                                            }
                                         }
                                     }
                                 })

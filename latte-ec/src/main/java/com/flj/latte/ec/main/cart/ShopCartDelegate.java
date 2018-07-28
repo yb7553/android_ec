@@ -214,6 +214,12 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         final String shopcartUrl = API.Config.getDomain() + API.CART_GET;
@@ -222,7 +228,6 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
         final WeakHashMap<String, Object> shopcart = new WeakHashMap<>();
         shopcart.put("userId", mUserId);
         final String jsonString = JSON.toJSONString(shopcart);
-
         RestClient.builder()
                 .url(shopcartUrl)
                 .raw(jsonString)
@@ -230,7 +235,6 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
                 .success(this)
                 .build()
                 .post();
-
 
     }
 
@@ -343,18 +347,44 @@ public class ShopCartDelegate extends BottomItemDelegate implements View.OnClick
     }
 
     private void onClickShopOrder() {
-        if (null == mAdapter) return;
         ArrayList<MultipleItemEntity> data = (ArrayList<MultipleItemEntity>) mAdapter.getData();
-        if (null == data || data.size() == 0) {
+        if (null == data) {
             ToastUtil.showToast(getContext(), "无物品信息不能结算");
             return;
         }
+        //判断是否有库存
+
+        boolean flag = true;
+        //跳转详情
         String cart_good_id = "[";
+        int selectCount = 0;
         for (MultipleItemEntity entity : data) {
             cart_good_id += entity.getField(ShopCartItemFields.GOODS_ID) + ",";
+            boolean isSelect = entity.getField(ShopCartItemFields.IS_SELECTED);
+            if (isSelect) ++selectCount;
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_ON_SALE) && isSelect) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "下架了");
+                flag = false;
+                return;
+            }
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_GOODS) && isSelect) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
+                flag = false;
+                return;
+            }
+            if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_ATTR) && isSelect) {
+                ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
+                flag = false;
+                return;
+            }
         }
+        if (!flag) return;
         cart_good_id = cart_good_id.substring(0, cart_good_id.length() - 1) + "]";
-        getParentDelegate().getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
+        if (selectCount == 0) {
+            ToastUtil.showToast(getContext(), "请选择需要购买的商品");
+            return;
+        }
+        getSupportDelegate().start(new ShopOrderDelegate().create(cart_good_id, mTvTotalPrice.getText().toString().trim()));
     }
 
     @Override
