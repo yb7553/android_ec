@@ -371,7 +371,6 @@ public class ShopCartDetailDelegate extends LatteDelegate implements View.OnClic
             if (!(boolean) entity.getField(ShopCartItemFields.IS_EXIST_ATTR) && isSelect) {
                 ToastUtil.showToast(getContext(), "" + entity.getField(ShopCartItemFields.TITLE) + "暂无库存");
                 flag = false;
-
                 return;
             }
         }
